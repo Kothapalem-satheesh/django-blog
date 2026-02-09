@@ -1,0 +1,858 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Home - Inspiring Blogs{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Hero Section */
+    .hero-section {
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.7) 100%),
+                    url('{% if featured_posts.0.featured_image %}{{ featured_posts.0.featured_image.url }}{% else %}{% static "images/default-hero.jpg" %}{% endif %}');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        border-radius: 20px;
+        overflow: hidden;
+        margin: 2rem 0 3rem;
+        position: relative;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    }
+    
+    .hero-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, rgba(255,193,7,0.1), rgba(255,152,0,0.1));
+        z-index: 1;
+    }
+    
+    .hero-content {
+        padding: 5rem 2rem;
+        color: white;
+        position: relative;
+        z-index: 2;
+        text-align: center;
+    }
+    
+    .hero-badge {
+        background: linear-gradient(135deg, #ffc107, #ff9800);
+        color: white;
+        padding: 8px 20px;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        display: inline-block;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+        animation: pulse 2s infinite;
+    }
+    
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: 900;
+        line-height: 1.2;
+        margin-bottom: 1.5rem;
+        text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+        background: linear-gradient(to right, #ffc107, #ff9800);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .hero-description {
+        font-size: 1.3rem;
+        opacity: 0.9;
+        margin-bottom: 2.5rem;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.8;
+    }
+    
+    .hero-btn {
+        background: linear-gradient(135deg, #ffc107, #ff9800);
+        color: #212529;
+        padding: 15px 35px;
+        border-radius: 30px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 25px rgba(255, 193, 7, 0.4);
+        border: none;
+        font-size: 1.1rem;
+    }
+    
+    .hero-btn:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(255, 193, 7, 0.6);
+        color: #212529;
+    }
+    
+    /* Section Titles */
+    .section-title {
+        position: relative;
+        padding-bottom: 15px;
+        margin-bottom: 3rem;
+        font-weight: 800;
+        color: #333;
+        font-size: 2.2rem;
+        text-align: center;
+    }
+    
+    .section-title:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 5px;
+        background: linear-gradient(135deg, #ffc107, #ff9800);
+        border-radius: 3px;
+    }
+    
+    /* Post Cards */
+    .post-card {
+        border: none;
+        border-radius: 15px;
+        overflow: hidden;
+        transition: all 0.4s ease;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        height: 100%;
+        margin-bottom: 2rem;
+        background: white;
+        position: relative;
+    }
+    
+    .post-card:hover {
+        transform: translateY(-15px);
+        box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+    }
+    
+    .post-image-container {
+        height: 250px;
+        overflow: hidden;
+        position: relative;
+    }
+    
+    .post-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+    
+    .post-card:hover .post-image {
+        transform: scale(1.1);
+    }
+    
+    .post-category {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        background: linear-gradient(135deg, #ffc107, #ff9800);
+        color: white;
+        padding: 8px 20px;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        z-index: 2;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    
+    .post-date {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: rgba(0,0,0,0.8);
+        color: white;
+        padding: 8px 15px;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        z-index: 2;
+    }
+    
+    .card-body {
+        padding: 1.8rem;
+    }
+    
+    .post-title {
+        font-weight: 800;
+        line-height: 1.4;
+        margin-bottom: 1rem;
+        font-size: 1.4rem;
+        color: #333;
+    }
+    
+    .post-title a {
+        color: inherit;
+        text-decoration: none;
+        transition: color 0.3s ease;
+        display: block;
+    }
+    
+    .post-title a:hover {
+        color: #ff9800;
+    }
+    
+    .post-meta {
+        font-size: 0.9rem;
+        color: #6c757d;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+    
+    .post-meta span {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    .post-meta i {
+        color: #ffc107;
+        font-size: 1rem;
+    }
+    
+    .post-excerpt {
+        color: #666;
+        line-height: 1.8;
+        margin-bottom: 1.5rem;
+        font-size: 0.95rem;
+    }
+    
+    .read-more {
+        color: #ff9800;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        transition: all 0.3s ease;
+        padding: 8px 0;
+        border-bottom: 2px solid transparent;
+    }
+    
+    .read-more:hover {
+        color: #ffc107;
+        border-bottom-color: #ffc107;
+        transform: translateX(10px);
+    }
+    
+    /* Sidebar Widgets */
+    .sidebar-widget {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        margin-bottom: 2.5rem;
+        border: 1px solid rgba(0,0,0,0.05);
+        transition: transform 0.3s ease;
+    }
+    
+    .sidebar-widget:hover {
+        transform: translateY(-5px);
+    }
+    
+    .widget-title {
+        font-weight: 800;
+        color: #333;
+        margin-bottom: 1.8rem;
+        padding-bottom: 10px;
+        border-bottom: 3px solid;
+        border-image: linear-gradient(135deg, #ffc107, #ff9800) 1;
+        font-size: 1.3rem;
+    }
+    
+    /* Categories Widget */
+    .category-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .category-list li {
+        padding: 15px 0;
+        border-bottom: 1px solid #eee;
+        transition: all 0.3s ease;
+    }
+    
+    .category-list li:hover {
+        padding-left: 10px;
+    }
+    
+    .category-list li:last-child {
+        border-bottom: none;
+    }
+    
+    .category-list a {
+        color: #555;
+        text-decoration: none;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: color 0.3s ease;
+        font-weight: 500;
+    }
+    
+    .category-list a:hover {
+        color: #ff9800;
+    }
+    
+    .category-count {
+        background: linear-gradient(135deg, #ffc107, #ff9800);
+        color: white;
+        padding: 5px 12px;
+        border-radius: 15px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        min-width: 35px;
+        text-align: center;
+    }
+    
+    /* About Widget */
+    .about-widget {
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .about-icon {
+        font-size: 4rem;
+        background: linear-gradient(135deg, #ffc107, #ff9800);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 1.5rem;
+        display: inline-block;
+        animation: float 3s ease-in-out infinite;
+    }
+    
+    /* Social Widget */
+    .social-widget {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+    }
+    
+    .social-icons {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        margin-top: 1rem;
+    }
+    
+    .social-icon {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+    
+    .social-icon:hover {
+        background: white;
+        color: #764ba2;
+        transform: translateY(-5px) scale(1.1);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+    
+    /* Newsletter Widget */
+    .newsletter-widget {
+        background: linear-gradient(135deg, #ffc107, #ff9800);
+        color: #212529;
+        border: none;
+    }
+    
+    .newsletter-form .form-control {
+        border: none;
+        border-radius: 25px;
+        padding: 12px 20px;
+        background: rgba(255,255,255,0.9);
+        transition: all 0.3s ease;
+    }
+    
+    .newsletter-form .form-control:focus {
+        background: white;
+        box-shadow: 0 0 0 3px rgba(255,255,255,0.3);
+    }
+    
+    .newsletter-form .btn {
+        background: #212529;
+        color: white;
+        border: none;
+        border-radius: 25px;
+        padding: 12px 25px;
+        transition: all 0.3s ease;
+    }
+    
+    .newsletter-form .btn:hover {
+        background: #000;
+        transform: translateY(-2px);
+    }
+    
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 20px;
+        margin: 2rem 0;
+    }
+    
+    .empty-state-icon {
+        font-size: 4rem;
+        background: linear-gradient(135deg, #ffc107, #ff9800);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 1.5rem;
+        display: inline-block;
+    }
+    
+    /* Animations */
+    @keyframes pulse {
+        0% { box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3); }
+        50% { box-shadow: 0 4px 25px rgba(255, 193, 7, 0.6); }
+        100% { box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3); }
+    }
+    
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0px); }
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+        .hero-title {
+            font-size: 3rem;
+        }
+    }
+    
+    @media (max-width: 992px) {
+        .hero-content {
+            padding: 4rem 1.5rem;
+        }
+        
+        .hero-title {
+            font-size: 2.5rem;
+        }
+        
+        .hero-description {
+            font-size: 1.1rem;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+        }
+        
+        .post-image-container {
+            height: 220px;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .hero-section {
+            margin: 1rem 0 2rem;
+            border-radius: 15px;
+        }
+        
+        .hero-content {
+            padding: 3rem 1rem;
+        }
+        
+        .hero-title {
+            font-size: 2rem;
+        }
+        
+        .hero-description {
+            font-size: 1rem;
+        }
+        
+        .hero-btn {
+            padding: 12px 25px;
+            font-size: 1rem;
+        }
+        
+        .section-title {
+            font-size: 1.6rem;
+            margin-bottom: 2rem;
+        }
+        
+        .post-image-container {
+            height: 200px;
+        }
+        
+        .sidebar-widget {
+            padding: 1.5rem;
+        }
+        
+        .social-icons {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .hero-title {
+            font-size: 1.8rem;
+        }
+        
+        .hero-badge {
+            font-size: 0.8rem;
+            padding: 6px 15px;
+        }
+        
+        .post-title {
+            font-size: 1.2rem;
+        }
+        
+        .post-meta {
+            font-size: 0.8rem;
+            gap: 10px;
+        }
+        
+        .widget-title {
+            font-size: 1.1rem;
+        }
+        
+        .category-list a {
+            font-size: 0.9rem;
+        }
+    }
+    
+    @media (max-width: 400px) {
+        .hero-title {
+            font-size: 1.5rem;
+        }
+        
+        .hero-description {
+            font-size: 0.9rem;
+        }
+        
+        .section-title {
+            font-size: 1.4rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+{% if featured_posts %}
+{% with featured_posts|first as hero_post %}
+<div class="hero-section">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <span class="hero-badge">FEATURED STORY</span>
+        <h1 class="hero-title">{{ hero_post.title }}</h1>
+        <p class="hero-description">{{ hero_post.short_description|truncatechars:200 }}</p>
+        <a href="{% url 'blogs' hero_post.slug %}" class="hero-btn">
+            Read Full Story <i class="fas fa-arrow-right ms-2"></i>
+        </a>
+    </div>
+</div>
+{% endwith %}
+{% endif %}
+
+<div class="container">
+    <!-- Featured Posts Grid -->
+    {% if featured_posts|length > 1 %}
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="section-title">Featured Posts</h2>
+        </div>
+        {% for post in featured_posts %}
+        {% if not forloop.first %}
+        <div class="col-xl-4 col-lg-6 col-md-6">
+            <div class="post-card">
+                <div class="post-image-container">
+                    {% if post.featured_image %}
+                    <img src="{{ post.featured_image.url }}" class="post-image" alt="{{ post.title }}">
+                    {% else %}
+                    <div style="height: 100%; background: linear-gradient(135deg, #ffc107, #ff9800); display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-image fa-3x text-white"></i>
+                    </div>
+                    {% endif %}
+                    <span class="post-category">{{ post.category.category_name }}</span>
+                    <span class="post-date">{{ post.created_at|date:"M d" }}</span>
+                </div>
+                <div class="card-body">
+                    <h3 class="post-title">
+                        <a href="{% url 'blogs' post.slug %}">{{ post.title }}</a>
+                    </h3>
+                    <div class="post-meta">
+                        <span><i class="fas fa-user"></i> {{ post.author.get_full_name|default:post.author.username }}</span>
+                        <span><i class="fas fa-clock"></i> {{ post.created_at|timesince }} ago</span>
+                        <span><i class="fas fa-eye"></i> {{ post.views|default:0 }}</span>
+                    </div>
+                    <p class="post-excerpt">{{ post.short_description|truncatewords:25 }}</p>
+                    <a href="{% url 'blogs' post.slug %}" class="read-more">
+                        Continue Reading <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main Content Area -->
+    <div class="row">
+        <!-- Recent Articles -->
+        <div class="col-lg-8">
+            <h2 class="section-title">Latest Articles</h2>
+            
+            {% for post in posts %}
+            <div class="post-card mb-4">
+                <div class="row g-0 align-items-center">
+                    {% if post.featured_image %}
+                    <div class="col-md-4">
+                        <div class="post-image-container" style="height: 200px;">
+                            <img src="{{ post.featured_image.url }}" class="post-image" alt="{{ post.title }}">
+                            <span class="post-category">{{ post.category.category_name }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                    {% else %}
+                    <div class="col-12">
+                    {% endif %}
+                        <div class="card-body">
+                            <h3 class="post-title">
+                                <a href="{% url 'blogs' post.slug %}">{{ post.title }}</a>
+                            </h3>
+                            <div class="post-meta">
+                                <span><i class="fas fa-user"></i> {{ post.author.get_full_name|default:post.author.username }}</span>
+                                <span><i class="fas fa-calendar"></i> {{ post.created_at|date:"F d, Y" }}</span>
+                                <span><i class="fas fa-tag"></i> {{ post.category.category_name }}</span>
+                                <span><i class="fas fa-comment"></i> {{ post.comment_set.count }} comments</span>
+                            </div>
+                            <p class="post-excerpt">{{ post.short_description|truncatewords:35 }}</p>
+                            <a href="{% url 'blogs' post.slug %}" class="read-more">
+                                Read Article <i class="fas fa-arrow-right ms-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state">
+                <div class="empty-state-icon">
+                    <i class="fas fa-newspaper"></i>
+                </div>
+                <h3 class="mb-3">No Articles Yet</h3>
+                <p class="text-muted mb-4">Be the first to share your thoughts and ideas!</p>
+                {% if user.is_authenticated %}
+                <a href="{% url 'dashboard' %}" class="btn btn-warning">
+                    <i class="fas fa-plus me-2"></i>Create Your First Post
+                </a>
+                {% else %}
+                <a href="{% url 'register' %}" class="btn btn-warning">
+                    <i class="fas fa-user-plus me-2"></i>Join Now to Write
+                </a>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- About Widget -->
+            <div class="sidebar-widget about-widget">
+                <div class="about-icon">
+                    <i class="fas fa-feather-alt"></i>
+                </div>
+                <h4 class="widget-title">Welcome to Inspiring Blogs</h4>
+                <p class="text-muted mb-4">
+                    {{ about.about_description|default:"A platform where creativity meets inspiration. Share your stories, ideas, and experiences with a global community of thinkers and dreamers." }}
+                </p>
+                <div class="d-grid gap-2">
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}" class="btn btn-outline-warning">
+                        <i class="fas fa-edit me-2"></i>Write a Post
+                    </a>
+                    {% else %}
+                    <a href="{% url 'register' %}" class="btn btn-outline-warning">
+                        <i class="fas fa-user-plus me-2"></i>Join Community
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Categories Widget -->
+            <div class="sidebar-widget">
+                <h4 class="widget-title">Explore Categories</h4>
+                <ul class="category-list">
+                    {% for cat in categories %}
+                    <li>
+                        <a href="{% url 'posts_by_category' cat.id %}">
+                            <i class="fas fa-folder me-2"></i> {{ cat.category_name }}
+                            <span class="category-count">{{ cat.blog_set.count }}</span>
+                        </a>
+                    </li>
+                    {% empty %}
+                    <li class="text-center text-muted">No categories yet</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Popular Tags Widget -->
+            <div class="sidebar-widget">
+                <h4 class="widget-title">Popular Tags</h4>
+                <div class="d-flex flex-wrap gap-2">
+                    {% for tag in tags|slice:":10" %}
+                    <a href="{% url 'search' %}?keyword={{ tag.name }}" class="btn btn-sm btn-light">
+                        <i class="fas fa-hashtag me-1"></i> {{ tag.name }}
+                    </a>
+                    {% empty %}
+                    {% for cat in categories|slice:":6" %}
+                    <a href="{% url 'posts_by_category' cat.id %}" class="btn btn-sm btn-light">
+                        {{ cat.category_name }}
+                    </a>
+                    {% endfor %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Newsletter Widget -->
+            <div class="sidebar-widget newsletter-widget">
+                <h4 class="widget-title text-dark">Stay Updated</h4>
+                <p class="mb-3 text-dark">Get the latest posts delivered to your inbox.</p>
+                <form class="newsletter-form">
+                    <div class="input-group mb-3">
+                        <input type="email" class="form-control" placeholder="Enter your email" required>
+                        <button class="btn" type="submit">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    <small class="text-dark-50">No spam, unsubscribe anytime</small>
+                </form>
+            </div>
+
+            <!-- Social Widget -->
+            {% if social_links %}
+            <div class="sidebar-widget social-widget">
+                <h4 class="widget-title text-white">Connect With Us</h4>
+                <div class="social-icons">
+                    {% for link in social_links %}
+                    <a href="{{ link.url }}" target="_blank" class="social-icon" title="{{ link.platform }}">
+                        <i class="fab fa-{{ link.platform|lower }}"></i>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Newsletter form submission
+        const newsletterForm = document.querySelector('.newsletter-form');
+        if (newsletterForm) {
+            newsletterForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const email = this.querySelector('input[type="email"]').value;
+                // In a real application, you would send this to your backend
+                alert(`Thank you for subscribing with ${email}! You'll receive updates soon.`);
+                this.reset();
+            });
+        }
+
+        // Add hover effect to category list items
+        const categoryItems = document.querySelectorAll('.category-list li');
+        categoryItems.forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateX(5px)';
+            });
+            item.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateX(0)';
+            });
+        });
+
+        // Add animation to post cards on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all post cards
+        document.querySelectorAll('.post-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+
+        // Add click effect to buttons
+        document.querySelectorAll('.btn, .hero-btn, .read-more').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                // Ripple effect
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.cssText = `
+                    position: absolute;
+                    border-radius: 50%;
+                    background: rgba(255, 255, 255, 0.7);
+                    transform: scale(0);
+                    animation: ripple 0.6s linear;
+                    width: ${size}px;
+                    height: ${size}px;
+                    top: ${y}px;
+                    left: ${x}px;
+                    pointer-events: none;
+                `;
+                
+                this.style.position = 'relative';
+                this.style.overflow = 'hidden';
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+
+        // Add CSS for ripple animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    });
+</script>
+{% endblock %}

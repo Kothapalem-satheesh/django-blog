@@ -30,28 +30,25 @@ This is a full‑featured blog application built with Django. It includes public
 ### Screenshots
 
 #### Home Page
-<img src="screenshots/home.png" alt="Home Page" width="800"/>
-
+![alt text](image.png)
 #### Featured Posts
-<img src="screenshots/featured-posts.png" alt="Featured Posts" width="800"/>
-
+![alt text](image-1.png)
 #### Login Page
-<img src="screenshots/login.png" alt="Login Page" width="800"/>
-
+![alt text](image-2.png)
 #### Registration Page
-<img src="screenshots/register.png" alt="Registration Page" width="800"/>
+![alt text](image-3.png)
 
 #### Post Detail
-<img src="screenshots/post-detail.png" alt="Post Detail" width="800"/>
+![alt text](image-5.png)
 
 #### Blog Post with Comments
-<img src="screenshots/post-comments.png" alt="Blog Post with Comments" width="800"/>
+![alt text](image-6.png)
 
 #### Dashboard Overview
-<img src="screenshots/dashboard.png" alt="Dashboard Overview" width="800"/>
+![alt text](image-4.png)
 
 #### Categories Management
-<img src="screenshots/categories.png" alt="Categories Management" width="800"/>
+![alt text](image-7.png)
 
 ### Tech Stack
 

@@ -27,6 +27,32 @@ This is a full‑featured blog application built with Django. It includes public
 - **Responsive UI**
   - Basic responsive layout using Django templates and custom CSS
 
+### Screenshots
+
+#### Home Page
+<img src="screenshots/home.png" alt="Home Page" width="800"/>
+
+#### Featured Posts
+<img src="screenshots/featured-posts.png" alt="Featured Posts" width="800"/>
+
+#### Login Page
+<img src="screenshots/login.png" alt="Login Page" width="800"/>
+
+#### Registration Page
+<img src="screenshots/register.png" alt="Registration Page" width="800"/>
+
+#### Post Detail
+<img src="screenshots/post-detail.png" alt="Post Detail" width="800"/>
+
+#### Blog Post with Comments
+<img src="screenshots/post-comments.png" alt="Blog Post with Comments" width="800"/>
+
+#### Dashboard Overview
+<img src="screenshots/dashboard.png" alt="Dashboard Overview" width="800"/>
+
+#### Categories Management
+<img src="screenshots/categories.png" alt="Categories Management" width="800"/>
+
 ### Tech Stack
 
 - **Backend**: Django

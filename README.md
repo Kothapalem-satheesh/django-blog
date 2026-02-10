@@ -1,132 +1,120 @@
-## Django Blog Application
+# Django Blog Application
 
-This is a full‑featured blog application built with Django. It includes public blog pages and an admin dashboard for managing posts, categories, and users.
+A full-featured blog application built with **Django**. It includes a public blog and an admin-style dashboard for managing posts, categories, comments, and users.
 
-### Features
+## Features
 
-- **Blog posts**
-  - Create, edit, delete, and publish posts
-  - Post detail pages with featured images
-  - Status handling for drafts and published posts
-- **Categories**
-  - Organize posts into categories
-  - View posts filtered by category
-- **Comments**
-  - Add comments on blog posts
-  - Basic moderation workflow
-- **User authentication**
-  - User registration and login
-  - Secure password hashing via Django auth
-- **Dashboard**
-  - Admin-style dashboard for managing:
-    - Posts
-    - Categories
-    - Users
-- **Search**
-  - Search blog posts by title or content
-- **Responsive UI**
-  - Basic responsive layout using Django templates and custom CSS
+- **Blog posts**: create, edit, delete, feature, and publish posts (draft/published)
+- **Categories**: organize posts and browse/filter by category
+- **Comments**: add comments with a basic moderation workflow
+- **Authentication**: register, login, logout (Django auth)
+- **Dashboard**: manage posts, categories, comments, and users
+- **Search**: search posts by title/content
 
-### Screenshots
+## Screenshots
+
+> These screenshots are embedded via GitHub image links.  
+> If you prefer local screenshots, add them under a `screenshots/` folder and update the paths.
 
 #### Home Page
-![alt text](image.png)
+<img width="958" height="573" alt="Home Page" src="https://github.com/user-attachments/assets/23186853-e92e-4ab4-9539-abe082242be8" />
+
 #### Featured Posts
-screenshots/image-1.png
+<img width="960" height="573" alt="Featured Posts" src="https://github.com/user-attachments/assets/34434963-3e55-4b38-ab96-7be4801fdb27" />
+
 #### Login Page
-![alt text](image-2.png)
+<img width="960" height="573" alt="Login Page" src="https://github.com/user-attachments/assets/eb8d19c3-23ea-4def-9856-4c94001151ba" />
+
 #### Registration Page
-![alt text](image-3.png)
+<img width="960" height="576" alt="Registration Page" src="https://github.com/user-attachments/assets/00234e9e-1f13-4bb9-b61e-d9476d63e6d1" />
 
 #### Post Detail
-![alt text](image-5.png)
+<img width="960" height="569" alt="Post Detail" src="https://github.com/user-attachments/assets/655146c0-e570-488c-9f60-056b6c2d55a3" />
 
 #### Blog Post with Comments
-![alt text](image-6.png)
+<img width="959" height="571" alt="Blog Post with Comments" src="https://github.com/user-attachments/assets/6024a7b6-fba1-42b7-a59b-0308b489c942" />
 
 #### Dashboard Overview
-![alt text](image-4.png)
+<img width="960" height="575" alt="Dashboard Overview" src="https://github.com/user-attachments/assets/a724385e-881c-461a-a859-05883d305171" />
 
 #### Categories Management
-![alt text](image-7.png)
+<img width="959" height="571" alt="Categories Management" src="https://github.com/user-attachments/assets/20aac721-f597-49de-9be0-33f5765ef3c8" />
 
-### Tech Stack
+## Tech Stack
 
 - **Backend**: Django
 - **Frontend**: Django templates, HTML, CSS
-- **Database**: SQLite (default Django configuration)
-- **Forms & UI helpers**:
-  - `django-crispy-forms`
-  - `crispy-bootstrap4`
-- **Images**: `Pillow` for image handling
+- **Database**: SQLite (default local configuration)
+- **Forms/UI helpers**: `django-crispy-forms`, `crispy-bootstrap4`
+- **Images**: `Pillow`
 
-### Project Structure (Key Apps)
+## Project Structure
 
-- **`blog_main`**: Main project configuration (settings, URLs, WSGI/ASGI).
-- **`blogs`**: Core blog logic (models, views, URLs, context processors).
-- **`dashboards`**: Admin-style dashboard for managing content.
-- **`assignments`**: Additional app used within the project (e.g., extra content or examples).
-- **`templates`**: Shared templates for the public site and dashboard.
-- **`static` / `blog_main/static`**: CSS, images, and other static assets.
-- **`media`**: Uploaded media files (such as post images).
+- **`blog_main/`**: project configuration (settings, URLs, WSGI/ASGI)
+- **`blogs/`**: core blog logic (models, views, URLs, context processors)
+- **`dashboards/`**: admin-style dashboard for content management
+- **`assignments/`**: additional app used within the project
+- **`templates/`**: templates for the public site and dashboard
+- **`static/`**: CSS/images and other static assets
+- **`media/`**: uploaded media files (e.g., post images)
 
-### Getting Started
+## Getting Started (Local)
 
-#### 1. Create and activate a virtual environment
+#### 1) Create and activate a virtual environment
+
+Windows:
 
 ```bash
 python -m venv venv
 venv\Scripts\activate
 ```
 
-On Linux/macOS:
+Linux/macOS:
 
 ```bash
 python -m venv venv
 source venv/bin/activate
 ```
 
-#### 2. Install dependencies
+#### 2) Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-#### 3. Apply database migrations
+#### 3) Apply migrations
 
 ```bash
 python manage.py migrate
 ```
 
-#### 4. Create a superuser (for dashboard access)
+#### 4) Create a superuser (for dashboard access)
 
 ```bash
 python manage.py createsuperuser
 ```
 
-#### 5. Run the development server
+#### 5) Run the development server
 
 ```bash
 python manage.py runserver
 ```
 
-Then open your browser at `http://127.0.0.1:8000/`.
+Open `http://127.0.0.1:8000/`.
 
-### Usage
+## Usage
 
-- **Public site**: View posts, browse by category, search, and comment.
-- **Dashboard**: Log in as a staff/superuser to add and manage posts, categories, and users.
+- **Public site**: browse posts, filter by category, search, and add comments
+- **Dashboard**: log in as a staff/superuser to manage posts, categories, comments, and users
 
-### Static and Media Files
+## Static & Media Files
 
-- **Static files** (CSS, images, JS) live under `static/` and may also be collected into `staticfiles/`.
-- **Media files** uploaded through the admin or dashboard are stored in the `media/` directory.
+- **Static files**: stored under `static/` (CSS, images, JS)
+- **Media uploads**: stored under `media/`
 
-### Running Tests
+## Running Tests
 
 ```bash
 python manage.py test
 ```
-
-This will run tests defined inside the app `tests.py` files.
 

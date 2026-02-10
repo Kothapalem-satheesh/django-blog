@@ -32,7 +32,7 @@ This is a full‑featured blog application built with Django. It includes public
 #### Home Page
 ![alt text](image.png)
 #### Featured Posts
-![alt text](image-1.png)
+screenshots/image-1.png
 #### Login Page
 ![alt text](image-2.png)
 #### Registration Page

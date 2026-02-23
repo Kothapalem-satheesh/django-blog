@@ -112,8 +112,8 @@ def toggle_bookmark(request, blog_id):
     bookmark, created = Bookmark.objects.get_or_create(user=request.user, blog=blog)
     if not created:
         bookmark.delete()
-        return JsonResponse({'status': 'removed', 'count': blog.bookmarks.count()})
-    return JsonResponse({'status': 'added', 'count': blog.bookmarks.count()})
+        return JsonResponse({'status': 'removed', 'count': blog.bookmarks.count()}) # type: ignore
+    return JsonResponse({'status': 'added', 'count': blog.bookmarks.count()}) # type: ignore
 
 
 @login_required(login_url='login')

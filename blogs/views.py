@@ -1,10 +1,13 @@
+from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
+from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.contrib.auth.decorators import login_required
 
-from .models import Blog, Category, Comment, Bookmark
-from django.db.models import Q
 from .context_processors import get_categories, get_social_links
+from .forms import RegistrationForm
+from .models import Blog, Bookmark, Category, Comment
 
 
 
@@ -33,8 +36,8 @@ def blogs(request, slug):
     single_blog = get_object_or_404(Blog, slug=slug, status='Published')
     if request.method == 'POST':
         if not request.user.is_authenticated:
-            from django.contrib import messages as msg
-            msg.error(request, 'You must be logged in to comment.')
+            from django.contrib import messages
+            messages.error(request, 'You must be logged in to comment.')
             return HttpResponseRedirect(request.path_info)
         comment = Comment()
         comment.user = request.user
@@ -120,11 +123,6 @@ def my_bookmarks(request):
     ).select_related('blog', 'blog__category', 'blog__author').order_by('-created_at')
     return render(request, 'bookmarks.html', {'bookmarks': bookmarks})
 
-
-from django.shortcuts import render, redirect
-from django.core.mail import send_mail
-from .forms import RegistrationForm
-from django.conf import settings
 
 def register(request):
     if request.method == 'POST':

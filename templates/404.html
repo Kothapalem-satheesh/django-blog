@@ -1,573 +1,222 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block title %}404 — Page Not Found · Inspiring Blogs{% endblock %}
 
-{% block title %}404 - Page Not Found | Django Blog{% endblock %}
+{% block extra_css %}
+<style>
+.page-404 {
+    min-height: 65vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 0;
+}
+.error-card {
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.09);
+    padding: 3rem 2.5rem;
+    text-align: center;
+    max-width: 680px;
+    width: 100%;
+    animation: fadeUp 0.6s ease-out;
+}
+@keyframes fadeUp {
+    from { opacity:0; transform:translateY(30px); }
+    to   { opacity:1; transform:translateY(0); }
+}
+.error-num {
+    font-size: 7rem;
+    font-weight: 900;
+    line-height: 1;
+    background: linear-gradient(135deg, #ffc107, #ff9800);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: pulse 2.5s ease-in-out infinite;
+}
+@keyframes pulse {
+    0%,100% { transform: scale(1); }
+    50%      { transform: scale(1.04); }
+}
+.error-icon {
+    font-size: 3.5rem;
+    margin-bottom: 0.5rem;
+    animation: wobble 2s ease-in-out infinite;
+}
+@keyframes wobble {
+    0%,100% { transform: rotate(0deg); }
+    25%      { transform: rotate(-8deg); }
+    75%      { transform: rotate(8deg); }
+}
+.path-badge {
+    background: #f8f9fa;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-family: monospace;
+    font-size: 0.9rem;
+    color: #555;
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-bottom: 1.5rem;
+}
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 11px 22px;
+    border-radius: 25px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    cursor: pointer;
+}
+.btn-primary-custom {
+    background: linear-gradient(135deg,#ffc107,#ff9800);
+    color: #212529;
+}
+.btn-primary-custom:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(255,193,7,0.4);
+    color: #212529;
+}
+.btn-outline-custom {
+    background: transparent;
+    color: #555;
+    border-color: #ddd;
+}
+.btn-outline-custom:hover {
+    border-color: #ffc107;
+    color: #ff9800;
+    transform: translateY(-3px);
+}
+.divider-line {
+    height: 1px;
+    background: linear-gradient(to right, transparent, #e0e0e0, transparent);
+    margin: 2rem 0;
+}
+.search-box {
+    background: #f8f9fa;
+    border-radius: 14px;
+    padding: 1.4rem;
+    margin-bottom: 1.5rem;
+}
+.search-box .form-control {
+    border: 2px solid #e8e8e8;
+    border-radius: 25px 0 0 25px;
+    padding: 0.7rem 1.2rem;
+    font-size: 0.95rem;
+}
+.search-box .form-control:focus {
+    border-color: #ffc107;
+    box-shadow: none;
+}
+.search-box .btn {
+    border-radius: 0 25px 25px 0;
+    background: linear-gradient(135deg,#ffc107,#ff9800);
+    border: none;
+    color: #212529;
+    font-weight: 700;
+    padding: 0.7rem 1.4rem;
+}
+.cat-chip {
+    display: inline-block;
+    background: #f0f0f0;
+    color: #555;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: none;
+    margin: 3px;
+    transition: all 0.25s ease;
+}
+.cat-chip:hover {
+    background: linear-gradient(135deg,#ffc107,#ff9800);
+    color: #212529;
+    transform: translateY(-2px);
+}
+@media (max-width: 576px) {
+    .error-num { font-size: 5rem; }
+    .error-card { padding: 2rem 1.2rem; }
+    .action-buttons { flex-direction: column; align-items: center; }
+}
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="container-fluid d-flex align-items-center justify-content-center min-vh-80 py-5">
-    <div class="row justify-content-center w-100">
-        <div class="col-12 col-md-10 col-lg-8 col-xl-6 text-center">
-            <!-- 404 Illustration -->
-            <div class="mb-5 position-relative">
-                <div class="error-number display-1 fw-bold text-warning mb-0" style="font-size: 8rem; line-height: 1;">
-                    404
+<div class="page-404">
+    <div class="error-card">
+
+        <!-- Icon + Number -->
+        <div class="error-icon">🔍</div>
+        <div class="error-num">404</div>
+
+        <h2 class="fw-bold mt-2 mb-2" style="color:#222;">Page Not Found</h2>
+        <p class="text-muted mb-3" style="font-size:1rem; line-height:1.7; max-width:480px; margin:0 auto 1rem;">
+            The page you're looking for doesn't exist, has been moved, or was never here.
+        </p>
+
+        <!-- Requested path -->
+        <div class="path-badge">
+            <i class="fas fa-link me-2 text-warning"></i>{{ request.path }}
+        </div>
+
+        <!-- Action buttons -->
+        <div class="action-buttons d-flex flex-wrap justify-content-center gap-2 mb-3">
+            <a href="{% url 'home' %}" class="action-btn btn-primary-custom">
+                <i class="fas fa-home"></i> Back to Home
+            </a>
+            <button onclick="history.back()" class="action-btn btn-outline-custom">
+                <i class="fas fa-arrow-left"></i> Go Back
+            </button>
+        </div>
+
+        <div class="divider-line"></div>
+
+        <!-- Search -->
+        <div class="search-box">
+            <p class="fw-semibold mb-2 text-dark" style="font-size:0.9rem;">
+                <i class="fas fa-search me-2 text-warning"></i>Try searching for what you need:
+            </p>
+            <form action="{% url 'search' %}" method="GET">
+                <div class="input-group">
+                    <input type="text"
+                           class="form-control"
+                           name="keyword"
+                           placeholder="Search articles..."
+                           required
+                           autofocus>
+                    <button class="btn" type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
                 </div>
-                
-            </div>
-            
-            <!-- Main Message -->
-            <div class="mb-5">
-                <h1 class="display-5 fw-bold text-dark mb-3">Oops! Page Not Found</h1>
-                <p class="lead text-muted mb-4">
-                    We couldn't find the page you're looking for. It might have been moved, deleted, or never existed.
-                </p>
-                
-                <!-- Current Path -->
-                <div class="alert alert-light border mb-4">
-                    <i class="fa fa-link text-warning me-2"></i>
-                    <code class="text-dark">{{ request.path }}</code>
-                </div>
-            </div>
-            
-            <!-- Action Cards -->
-            <div class="row g-4 mb-5">
-                <div class="col-md-4">
-                    <div class="card border-0 shadow-sm h-100 hover-lift text-center">
-                        <div class="card-body p-4">
-                            <div class="mb-3">
-                                <i class="fa fa-home fa-3x text-warning"></i>
-                            </div>
-                            <h5 class="card-title mb-3">Go Home</h5>
-                            <p class="card-text text-muted small mb-3">
-                                Return to the homepage and browse our latest articles
-                            </p>
-                            <a href="{% url 'home' %}" class="btn btn-outline-warning w-100">
-                                <i class="fa fa-home me-2"></i>Homepage
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-4">
-                    <div class="card border-0 shadow-sm h-100 hover-lift text-center">
-                        <div class="card-body p-4">
-                            <div class="mb-3">
-                                <i class="fa fa-search fa-3x text-warning"></i>
-                            </div>
-                            <h5 class="card-title mb-3">Search Articles</h5>
-                            <p class="card-text text-muted small mb-3">
-                                Use our search feature to find what you're looking for
-                            </p>
-                            <a href="{% url 'search' %}" class="btn btn-outline-warning w-100">
-                                <i class="fa fa-search me-2"></i>Search
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-4">
-                    <div class="card border-0 shadow-sm h-100 hover-lift text-center">
-                        <div class="card-body p-4">
-                            <div class="mb-3">
-                                <i class="fa fa-arrow-left fa-3x text-warning"></i>
-                            </div>
-                            <h5 class="card-title mb-3">Go Back</h5>
-                            <p class="card-text text-muted small mb-3">
-                                Return to the previous page you were viewing
-                            </p>
-                            <button onclick="history.back()" class="btn btn-outline-warning w-100">
-                                <i class="fa fa-arrow-left me-2"></i>Go Back
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Search Form -->
-            <div class="card border-0 shadow-lg mb-5">
-                <div class="card-body p-4 p-md-5">
-                    <h4 class="h5 mb-4">
-                        <i class="fa fa-search text-warning me-2"></i>Can't find what you're looking for?
-                    </h4>
-                    <p class="text-muted mb-4">Try searching our website:</p>
-                    
-                    <form action="{% url 'search' %}" method="GET" class="search-form-404">
-                        <div class="input-group input-group-lg shadow-sm">
-                            <input type="text" 
-                                   class="form-control border-warning" 
-                                   name="keyword" 
-                                   placeholder="Search articles, categories, authors..."
-                                   aria-label="Search"
-                                   required>
-                            <button class="btn btn-warning" type="submit">
-                                <i class="fa fa-search"></i>
-                                <span class="d-none d-md-inline ms-2">Search</span>
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            
-            <!-- Popular Categories -->
-            {% if categories %}
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-light py-3">
-                    <h4 class="h5 mb-0">
-                        <i class="fa fa-fire text-warning me-2"></i>Browse Popular Categories
-                    </h4>
-                </div>
-                <div class="card-body">
-                    <div class="row g-2">
-                        {% for cat in categories|slice:":8" %}
-                        <div class="col-6 col-md-3">
-                            <a href="{% url 'posts_by_category' cat.id %}" 
-                               class="btn btn-outline-secondary d-flex align-items-center justify-content-center py-2 w-100">
-                                <i class="fa fa-folder-open me-2"></i>
-                                <span class="text-truncate">{{ cat.category_name }}</span>
-                            </a>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-            
-            <!-- Help Text -->
-            <div class="mt-5 pt-4 border-top text-center">
-                <p class="text-muted small mb-2">
-                    <i class="fa fa-info-circle text-warning me-1"></i>
-                    If you believe this is a broken link, please <a href="#" class="text-warning">contact us</a>.
-                </p>
-                <p class="text-muted small">
-                    Error Code: 404 | Resource Not Found
-                </p>
+            </form>
+        </div>
+
+        <!-- Browse categories -->
+        {% if categories %}
+        <div>
+            <p class="fw-semibold mb-2 text-dark" style="font-size:0.85rem; text-transform:uppercase; letter-spacing:0.5px;">
+                <i class="fas fa-folder me-2 text-warning"></i>Browse Categories
+            </p>
+            <div>
+                {% for cat in categories %}
+                <a href="{% url 'posts_by_category' cat.id %}" class="cat-chip">
+                    {{ cat.category_name }}
+                    <span style="opacity:0.6;">({{ cat.blog_set.count }})</span>
+                </a>
+                {% endfor %}
             </div>
         </div>
+        {% endif %}
+
     </div>
 </div>
-
-<!-- Floating Help Button -->
-<button class="btn btn-warning rounded-circle shadow-lg position-fixed d-none d-md-block" 
-        style="bottom: 20px; right: 20px; width: 60px; height: 60px; z-index: 1000;"
-        data-bs-toggle="modal" data-bs-target="#helpModal">
-    <i class="fa fa-question fa-lg"></i>
-</button>
-
-<!-- Help Modal -->
-<div class="modal fade" id="helpModal" tabindex="-1" aria-labelledby="helpModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="helpModalLabel">
-                    <i class="fa fa-life-ring text-warning me-2"></i>Need Help?
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-4">
-                    <h6 class="h6 mb-3">What happened?</h6>
-                    <p class="small text-muted mb-0">
-                        The page you're trying to access doesn't exist or has been moved. This could be due to:
-                    </p>
-                    <ul class="small text-muted mt-2">
-                        <li>A mistyped URL</li>
-                        <li>A broken link</li>
-                        <li>The page being removed or renamed</li>
-                    </ul>
-                </div>
-                
-                <div>
-                    <h6 class="h6 mb-3">What can you do?</h6>
-                    <div class="row g-2">
-                        <div class="col-6">
-                            <a href="{% url 'home' %}" class="btn btn-outline-warning btn-sm w-100">
-                                <i class="fa fa-home me-1"></i> Home
-                            </a>
-                        </div>
-                        <div class="col-6">
-                            <a href="{% url 'search' %}" class="btn btn-outline-warning btn-sm w-100">
-                                <i class="fa fa-search me-1"></i> Search
-                            </a>
-                        </div>
-                        <div class="col-6">
-                            <button class="btn btn-outline-warning btn-sm w-100" onclick="history.back()">
-                                <i class="fa fa-arrow-left me-1"></i> Back
-                            </button>
-                        </div>
-                        <div class="col-6">
-                            <button class="btn btn-outline-warning btn-sm w-100" data-bs-dismiss="modal">
-                                <i class="fa fa-times me-1"></i> Close
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<style>
-    /* Custom Styles */
-    .min-vh-80 {
-        min-height: 80vh;
-    }
-    
-    .error-number {
-        font-size: 8rem;
-        line-height: 1;
-        text-shadow: 3px 3px 0 rgba(0,0,0,0.1);
-        animation: pulse 2s infinite;
-    }
-    
-    @keyframes pulse {
-        0% {
-            opacity: 1;
-            transform: scale(1);
-        }
-        50% {
-            opacity: 0.9;
-            transform: scale(1.05);
-        }
-        100% {
-            opacity: 1;
-            transform: scale(1);
-        }
-    }
-    
-    .hover-lift {
-        transition: all 0.3s ease;
-    }
-    
-    .hover-lift:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important;
-    }
-    
-    .search-form-404 .form-control:focus {
-        border-color: #ffc107;
-        box-shadow: 0 0 0 0.25rem rgba(255, 193, 7, 0.25);
-    }
-    
-    /* Responsive Design */
-    @media (max-width: 768px) {
-        .error-number {
-            font-size: 6rem;
-        }
-        
-        .display-5 {
-            font-size: 2rem;
-        }
-        
-        .lead {
-            font-size: 1rem;
-        }
-        
-        .card-body {
-            padding: 1.5rem !important;
-        }
-        
-        .input-group-lg {
-            flex-direction: column;
-        }
-        
-        .input-group-lg .form-control {
-            border-radius: 0.375rem 0.375rem 0 0 !important;
-            margin-bottom: -1px;
-        }
-        
-        .input-group-lg .btn {
-            border-radius: 0 0 0.375rem 0.375rem !important;
-            width: 100%;
-        }
-    }
-    
-    @media (max-width: 576px) {
-        .error-number {
-            font-size: 4rem;
-        }
-        
-        .display-5 {
-            font-size: 1.75rem;
-        }
-        
-        .col-6 {
-            padding-left: 4px;
-            padding-right: 4px;
-        }
-        
-        .btn {
-            padding: 0.5rem 0.75rem;
-            font-size: 0.875rem;
-        }
-        
-        .modal-dialog {
-            margin: 0.5rem;
-        }
-    }
-    
-    /* Animation for page load */
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    .row > div {
-        animation: fadeIn 0.6s ease-out;
-        animation-fill-mode: both;
-    }
-    
-    .row > div:nth-child(1) { animation-delay: 0.1s; }
-    .row > div:nth-child(2) { animation-delay: 0.2s; }
-    .row > div:nth-child(3) { animation-delay: 0.3s; }
-    .row > div:nth-child(4) { animation-delay: 0.4s; }
-    .row > div:nth-child(5) { animation-delay: 0.5s; }
-    .row > div:nth-child(6) { animation-delay: 0.6s; }
-    
-    /* Custom scrollbar */
-    ::-webkit-scrollbar {
-        width: 10px;
-    }
-    
-    ::-webkit-scrollbar-track {
-        background: #f8f9fa;
-    }
-    
-    ::-webkit-scrollbar-thumb {
-        background: #ffc107;
-        border-radius: 5px;
-    }
-    
-    ::-webkit-scrollbar-thumb:hover {
-        background: #e0a800;
-    }
-    
-    /* Smooth scrolling */
-    html {
-        scroll-behavior: smooth;
-    }
-    
-    /* Focus styles for accessibility */
-    .btn:focus, .form-control:focus {
-        box-shadow: 0 0 0 0.25rem rgba(255, 193, 7, 0.5) !important;
-    }
-    
-    /* Touch optimization */
-    @media (max-width: 768px) {
-        .btn, a {
-            min-height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        /* Prevent zoom on mobile form focus */
-        input, select, textarea {
-            font-size: 16px;
-        }
-    }
-</style>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Auto-focus search input
-        const searchInput = document.querySelector('.search-form-404 input[name="keyword"]');
-        if (searchInput) {
-            setTimeout(() => {
-                searchInput.focus();
-            }, 500);
-        }
-        
-        // Form validation
-        const searchForm = document.querySelector('.search-form-404');
-        if (searchForm) {
-            searchForm.addEventListener('submit', function(e) {
-                const input = this.querySelector('input[name="keyword"]');
-                if (!input.value.trim()) {
-                    e.preventDefault();
-                    input.focus();
-                    input.classList.add('is-invalid');
-                    
-                    // Add error message
-                    let errorDiv = this.querySelector('.search-error');
-                    if (!errorDiv) {
-                        errorDiv = document.createElement('div');
-                        errorDiv.className = 'search-error invalid-feedback d-block mt-2';
-                        errorDiv.textContent = 'Please enter a search term';
-                        this.appendChild(errorDiv);
-                    }
-                    
-                    setTimeout(() => {
-                        input.classList.remove('is-invalid');
-                        if (errorDiv) errorDiv.remove();
-                    }, 3000);
-                }
-            });
-        }
-        
-        // Add animation to 404 number
-        const errorNumber = document.querySelector('.error-number');
-        if (errorNumber) {
-            errorNumber.style.opacity = '0';
-            errorNumber.style.transform = 'scale(0.5)';
-            
-            setTimeout(() => {
-                errorNumber.style.transition = 'all 0.8s ease-out';
-                errorNumber.style.opacity = '1';
-                errorNumber.style.transform = 'scale(1)';
-            }, 300);
-        }
-        
-        // Add click animation to cards
-        document.querySelectorAll('.card').forEach(card => {
-            card.addEventListener('click', function(e) {
-                if (!e.target.matches('a, button, input')) {
-                    const link = this.querySelector('a');
-                    if (link) {
-                        link.click();
-                    }
-                }
-            });
-        });
-        
-        // Back button functionality
-        const backButtons = document.querySelectorAll('button[onclick*="history.back"]');
-        backButtons.forEach(btn => {
-            btn.addEventListener('click', function() {
-                // Add animation before going back
-                document.body.style.opacity = '0';
-                document.body.style.transition = 'opacity 0.3s ease';
-                
-                setTimeout(() => {
-                    window.history.back();
-                }, 300);
-            });
-        });
-        
-        // Track 404 error (for analytics)
-        console.log('404 Error: Page not found at', window.location.pathname);
-        
-        // Share error page (for debugging)
-        window.shareError = function() {
-            if (navigator.share) {
-                navigator.share({
-                    title: '404 Error - Django Blog',
-                    text: 'Found a broken link on Django Blog',
-                    url: window.location.href
-                });
-            } else {
-                // Fallback for desktop
-                const textArea = document.createElement('textarea');
-                textArea.value = window.location.href;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-                
-                // Show copied message
-                showToast('URL copied to clipboard!');
-            }
-        };
-        
-        // Toast notification function
-        function showToast(message) {
-            const toast = document.createElement('div');
-            toast.className = 'toast-notification position-fixed';
-            toast.style.cssText = `
-                position: fixed;
-                bottom: 20px;
-                left: 50%;
-                transform: translateX(-50%);
-                background: #ffc107;
-                color: #212529;
-                padding: 12px 24px;
-                border-radius: 8px;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-                z-index: 9999;
-                animation: slideUp 0.3s ease;
-            `;
-            toast.innerHTML = `
-                <i class="fa fa-check-circle me-2"></i>
-                <strong>${message}</strong>
-            `;
-            
-            document.body.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.style.animation = 'slideDown 0.3s ease';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
-        
-        // Add CSS animations for toast
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideUp {
-                from {
-                    transform: translate(-50%, 100%);
-                    opacity: 0;
-                }
-                to {
-                    transform: translate(-50%, 0);
-                    opacity: 1;
-                }
-            }
-            
-            @keyframes slideDown {
-                from {
-                    transform: translate(-50%, 0);
-                    opacity: 1;
-                }
-                to {
-                    transform: translate(-50%, 100%);
-                    opacity: 0;
-                }
-            }
-        `;
-        document.head.appendChild(style);
-        
-        // Mobile adjustments
-        if (window.innerWidth < 768) {
-            // Adjust card padding
-            document.querySelectorAll('.card-body').forEach(body => {
-                body.style.padding = '1.25rem !important';
-            });
-            
-            // Make buttons more touch-friendly
-            document.querySelectorAll('.btn').forEach(btn => {
-                btn.style.padding = '0.75rem 1rem';
-            });
-            
-            // Adjust modal for mobile
-            const modal = document.getElementById('helpModal');
-            if (modal) {
-                modal.addEventListener('show.bs.modal', function() {
-                    this.querySelector('.modal-dialog').style.margin = '0.5rem';
-                });
-            }
-        }
-        
-        // Prevent form resubmission
-        if (window.history.replaceState) {
-            window.history.replaceState(null, null, window.location.href);
-        }
-    });
-    
-    // Page transition effects
-    window.addEventListener('beforeunload', function() {
-        document.body.style.opacity = '0';
-        document.body.style.transition = 'opacity 0.3s ease';
-    });
-    
-    // Handle browser back/forward
-    window.addEventListener('pageshow', function(event) {
-        if (event.persisted) {
-            document.body.style.opacity = '1';
-        }
-    });
-</script>
 {% endblock %}

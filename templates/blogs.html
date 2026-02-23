@@ -1,361 +1,390 @@
 {% extends 'base.html' %}
-{% load crispy_forms_tags %}
+{% load static %}
 
-{% block title %}{{ single_blog.title }} - Django Blog{% endblock %}
+{% block title %}{{ single_blog.title }} — Inspiring Blogs{% endblock %}
 
 {% block extra_css %}
 <style>
-    .post-header {
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-        border-radius: 15px;
-        padding: 3rem;
-        margin-bottom: 3rem;
-    }
-    .post-title {
-        font-size: 2.5rem;
-        font-weight: 800;
-        line-height: 1.2;
-        margin-bottom: 1rem;
-    }
-    .post-meta {
-        color: #6c757d;
-        font-size: 0.95rem;
-    }
-    .post-meta i {
-        color: #ffc107;
-        margin-right: 5px;
-    }
-    .post-featured-image {
-        width: 100%;
-        max-height: 500px;
-        object-fit: cover;
-        border-radius: 10px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        margin-bottom: 2rem;
-    }
-    .post-content {
-        font-size: 1.1rem;
-        line-height: 1.8;
-        color: #444;
-    }
-    .post-content img {
-        max-width: 100%;
-        height: auto;
-        border-radius: 8px;
-        margin: 2rem 0;
-    }
-    .post-content h2, .post-content h3 {
-        margin-top: 2rem;
-        margin-bottom: 1rem;
-        color: #333;
-    }
-    .category-badge {
-        background: #ffc107;
-        color: #212529;
-        padding: 8px 20px;
-        border-radius: 25px;
-        font-weight: 600;
-        font-size: 0.9rem;
-        display: inline-block;
-        margin-bottom: 1rem;
-    }
-    .share-buttons {
-        display: flex;
-        gap: 10px;
-        margin: 2rem 0;
-    }
-    .share-btn {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        text-decoration: none;
-        transition: all 0.3s ease;
-    }
-    .share-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    }
-    .facebook { background: #3b5998; }
-    .twitter { background: #1da1f2; }
-    .linkedin { background: #0077b5; }
-    .whatsapp { background: #25d366; }
-    
-    /* Comments Section */
-    .comments-section {
-        background: #fff;
-        border-radius: 15px;
-        padding: 2rem;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-        margin-top: 3rem;
-    }
-    .comment-card {
-        border-left: 3px solid #ffc107;
-        background: #f8f9fa;
-        padding: 1.5rem;
-        margin-bottom: 1rem;
-        border-radius: 0 8px 8px 0;
-    }
-    .comment-author {
-        font-weight: 600;
-        color: #333;
-    }
-    .comment-time {
-        font-size: 0.85rem;
-        color: #6c757d;
-    }
-    .comment-form {
-        background: #f8f9fa;
-        padding: 2rem;
-        border-radius: 10px;
-        margin-top: 2rem;
-    }
-    .no-comments {
-        text-align: center;
-        padding: 3rem;
-        color: #6c757d;
-    }
-    .no-comments i {
-        font-size: 3rem;
-        margin-bottom: 1rem;
-        color: #dee2e6;
-    }
-    
-    /* Sidebar */
-    .related-post {
-        display: flex;
-        align-items: center;
-        margin-bottom: 1rem;
-        padding-bottom: 1rem;
-        border-bottom: 1px solid #eee;
-    }
-    .related-post img {
-        width: 80px;
-        height: 60px;
-        object-fit: cover;
-        border-radius: 5px;
-        margin-right: 15px;
-    }
-    .related-post-title {
-        font-size: 0.95rem;
-        font-weight: 600;
-        margin-bottom: 5px;
-    }
+/* ── Post Header ── */
+.post-hero {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border-radius: 18px; padding: 4rem 2.5rem; margin-bottom: 2rem;
+    color: white; position: relative; overflow: hidden;
+}
+.post-hero .cat-pill {
+    background: linear-gradient(135deg,#ffc107,#ff9800);
+    color: #212529; font-weight: 700; font-size: 0.78rem;
+    padding: 5px 16px; border-radius: 20px;
+    text-decoration: none; display: inline-block; margin-bottom: 1rem;
+    text-transform: uppercase; letter-spacing: 0.8px;
+}
+.post-hero h1 {
+    font-size: 2.4rem; font-weight: 900; line-height: 1.25;
+    margin-bottom: 1rem; text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+.post-hero .meta { font-size: 0.9rem; opacity: 0.85; display: flex; flex-wrap: wrap; gap: 18px; }
+.post-hero .meta i { color: #ffc107; margin-right: 5px; }
+
+/* ── Share bar ── */
+.share-bar { display: flex; align-items: center; gap: 10px; margin: 1.5rem 0; flex-wrap: wrap; }
+.share-bar span { font-weight: 700; font-size: 0.85rem; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
+.share-btn {
+    width: 38px; height: 38px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: white; text-decoration: none; font-size: 0.85rem;
+    transition: all 0.3s ease;
+}
+.share-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 18px rgba(0,0,0,0.2); color: white; }
+.s-fb { background:#3b5998; } .s-tw { background:#1da1f2; }
+.s-li { background:#0077b5; } .s-wa { background:#25d366; }
+
+/* ── Article body ── */
+.article-body {
+    font-size: 1.05rem; line-height: 1.9; color: #3a3a3a;
+    background: white; border-radius: 14px;
+    padding: 2rem 2.2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    margin-bottom: 2rem;
+}
+.article-body h2, .article-body h3 { color: #222; margin-top: 1.8rem; margin-bottom: 0.8rem; font-weight: 800; }
+.article-body img { max-width: 100%; border-radius: 10px; margin: 1.5rem 0; }
+.article-body p { margin-bottom: 1.2rem; }
+
+/* ── Featured image ── */
+.featured-img-block img {
+    width: 100%; max-height: 460px; object-fit: cover;
+    border-radius: 14px; box-shadow: 0 10px 35px rgba(0,0,0,0.12);
+    margin-bottom: 2rem;
+}
+
+/* ── Comments ── */
+.comments-box {
+    background: white; border-radius: 14px;
+    padding: 2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    margin-bottom: 2rem;
+}
+.comments-box h3 { font-weight: 800; font-size: 1.25rem; margin-bottom: 1.5rem; }
+.comment-item {
+    border-left: 4px solid #ffc107; background: #fafafa;
+    padding: 1.2rem 1.4rem; margin-bottom: 1rem;
+    border-radius: 0 10px 10px 0;
+}
+.comment-item .author { font-weight: 700; color: #333; font-size: 0.9rem; }
+.comment-item .time { font-size: 0.78rem; color: #aaa; }
+.comment-form-box {
+    background: #f8f9fa; border-radius: 12px; padding: 1.8rem;
+}
+.comment-form-box h4 { font-weight: 800; font-size: 1rem; margin-bottom: 1.2rem; }
+.comment-form-box textarea {
+    border: 2px solid #e8e8e8; border-radius: 10px; resize: none;
+    padding: 0.9rem; font-size: 0.95rem; transition: border-color 0.3s ease;
+}
+.comment-form-box textarea:focus { border-color: #ffc107; box-shadow: none; }
+
+/* ── Sidebar ── */
+.sidebar-widget {
+    background: white; border-radius: 14px;
+    padding: 1.5rem; box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+    margin-bottom: 1.6rem;
+}
+.widget-title {
+    font-weight: 800; font-size: 0.9rem; text-transform: uppercase;
+    letter-spacing: 0.8px; color: #333; margin-bottom: 1.1rem;
+    padding-bottom: 9px; border-bottom: 3px solid #ffc107;
+}
+
+/* ── Related posts ── */
+.related-item {
+    display: flex; gap: 12px; padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0; align-items: flex-start;
+}
+.related-item:last-child { border-bottom: none; }
+.related-item img { width: 72px; height: 56px; object-fit: cover; border-radius: 8px; flex-shrink: 0; }
+.related-item-body .title { font-size: 0.85rem; font-weight: 700; line-height: 1.35; color: #333; }
+.related-item-body .title a { color: inherit; text-decoration: none; }
+.related-item-body .title a:hover { color: #ff9800; }
+.related-item-body .meta { font-size: 0.75rem; color: #aaa; margin-top: 3px; }
+
+/* ── Related posts grid (bottom) ── */
+.related-grid-card {
+    border: none; border-radius: 14px; overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+}
+.related-grid-card:hover { transform: translateY(-6px); box-shadow: 0 14px 35px rgba(0,0,0,0.12); }
+.related-grid-card .img-wrap { height: 180px; overflow: hidden; position: relative; }
+.related-grid-card .img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.45s ease; }
+.related-grid-card:hover .img-wrap img { transform: scale(1.06); }
+.related-grid-card .cat-tag {
+    position: absolute; bottom: 10px; left: 10px;
+    background: linear-gradient(135deg,#ffc107,#ff9800); color: #212529;
+    font-size: 0.7rem; font-weight: 700; padding: 3px 10px; border-radius: 12px;
+}
+.related-grid-card .card-body { padding: 1.2rem; }
+.related-grid-card .card-title { font-weight: 800; font-size: 0.95rem; line-height: 1.4; margin-bottom: 0.5rem; color: #222; }
+.related-grid-card .card-title a { color: inherit; text-decoration: none; }
+.related-grid-card .card-title a:hover { color: #ff9800; }
+
+/* ── Author box ── */
+.author-box {
+    background: linear-gradient(135deg, #fff8e1, #fffde7);
+    border: 1px solid #ffe082; border-radius: 14px; padding: 1.5rem; text-align: center;
+}
+.author-avatar {
+    width: 64px; height: 64px; background: linear-gradient(135deg,#ffc107,#ff9800);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 0.8rem; font-size: 1.6rem; color: #212529; font-weight: 900;
+}
+
+@media (max-width: 767px) {
+    .post-hero h1 { font-size: 1.7rem; }
+    .post-hero { padding: 2.5rem 1.2rem; }
+    .article-body { padding: 1.4rem; }
+}
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <!-- Post Header -->
-    <div class="post-header">
-        <span class="category-badge">{{ single_blog.category }}</span>
-        <h1 class="post-title">{{ single_blog.title }}</h1>
-        
-        <div class="post-meta mb-4">
-            <span class="me-4">
-                <i class="fas fa-user"></i> By {{ single_blog.author }}
-            </span>
-            <span class="me-4">
-                <i class="fas fa-calendar"></i> {{ single_blog.created_at|date:"F d, Y" }}
-            </span>
-            <span>
-                <i class="fas fa-clock"></i> {{ single_blog.created_at|timesince }} ago
-            </span>
+<!-- ════════════════════ POST HERO ════════════════════ -->
+<div class="post-hero"
+     {% if single_blog.featured_image %}
+     style="background: linear-gradient(135deg, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.55) 100%), url('{{ single_blog.featured_image.url }}'); background-size:cover; background-position:center;"
+     {% endif %}>
+    <!-- Back button -->
+    <button class="page-back-btn mb-2" onclick="history.back()">
+        <i class="fas fa-arrow-left"></i> Back
+    </button>
+    <a href="{% url 'posts_by_category' single_blog.category.id %}" class="cat-pill">
+        {{ single_blog.category.category_name }}
+    </a>
+    <div class="d-flex align-items-start justify-content-between gap-3 flex-wrap">
+        <h1 class="flex-grow-1">{{ single_blog.title }}</h1>
+        {% if user.is_authenticated %}
+        <button class="bookmark-btn flex-shrink-0 mt-2
+                       {% if single_blog.id in bookmarked_ids %}bookmarked{% endif %}"
+                title="{% if single_blog.id in bookmarked_ids %}Remove bookmark{% else %}Bookmark this article{% endif %}"
+                onclick="toggleBookmark({{ single_blog.id }}, this)">
+            <i class="fas fa-bookmark"></i>
+        </button>
+        {% endif %}
+    </div>
+    <div class="meta">
+        <span><i class="fas fa-user"></i>{{ single_blog.author.get_full_name|default:single_blog.author.username }}</span>
+        <span><i class="fas fa-calendar"></i>{{ single_blog.created_at|date:"F d, Y" }}</span>
+        <span><i class="fas fa-clock"></i>{{ single_blog.created_at|timesince }} ago</span>
+        <span><i class="fas fa-comments"></i>{{ comment_count }} comment{{ comment_count|pluralize }}</span>
+    </div>
+</div>
+
+<!-- ════════════════════ SHARE BAR ════════════════════ -->
+<div class="share-bar mb-3">
+    <span>Share:</span>
+    <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}"
+       target="_blank" class="share-btn s-fb" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+    <a href="https://twitter.com/intent/tweet?text={{ single_blog.title|urlencode }}&url={{ request.build_absolute_uri }}"
+       target="_blank" class="share-btn s-tw" title="Twitter"><i class="fab fa-twitter"></i></a>
+    <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.build_absolute_uri }}&title={{ single_blog.title|urlencode }}"
+       target="_blank" class="share-btn s-li" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+    <a href="https://wa.me/?text={{ single_blog.title|urlencode }}%20{{ request.build_absolute_uri }}"
+       target="_blank" class="share-btn s-wa" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+</div>
+
+<!-- ════════════════════ MAIN + SIDEBAR ════════════════════ -->
+<div class="row g-4">
+
+    <!-- Main Content -->
+    <div class="col-lg-8">
+
+        <!-- Featured Image -->
+        {% if single_blog.featured_image %}
+        <div class="featured-img-block">
+            <img src="{{ single_blog.featured_image.url }}" alt="{{ single_blog.title }}">
         </div>
-        
-        <!-- Share Buttons -->
-        <div class="share-buttons">
-            <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" 
-               target="_blank" class="share-btn facebook" title="Share on Facebook">
-                <i class="fab fa-facebook-f"></i>
-            </a>
-            <a href="https://twitter.com/intent/tweet?text={{ single_blog.title }}&url={{ request.build_absolute_uri }}" 
-               target="_blank" class="share-btn twitter" title="Share on Twitter">
-                <i class="fab fa-twitter"></i>
-            </a>
-            <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.build_absolute_uri }}&title={{ single_blog.title }}" 
-               target="_blank" class="share-btn linkedin" title="Share on LinkedIn">
-                <i class="fab fa-linkedin-in"></i>
-            </a>
-            <a href="https://wa.me/?text={{ single_blog.title }} {{ request.build_absolute_uri }}" 
-               target="_blank" class="share-btn whatsapp" title="Share on WhatsApp">
-                <i class="fab fa-whatsapp"></i>
-            </a>
+        {% endif %}
+
+        <!-- Article Body -->
+        <div class="article-body">
+            {{ single_blog.blog_body|linebreaks }}
+        </div>
+
+        <!-- Comments -->
+        <div class="comments-box">
+            <h3><i class="fas fa-comments text-warning me-2"></i>Comments ({{ comment_count }})</h3>
+
+            {% for comment in comments %}
+            <div class="comment-item">
+                <div class="d-flex justify-content-between mb-1">
+                    <span class="author"><i class="fas fa-user-circle me-2 text-warning"></i>{{ comment.user }}</span>
+                    <span class="time">{{ comment.created_at|timesince }} ago</span>
+                </div>
+                <p class="mb-0">{{ comment.comment }}</p>
+            </div>
+            {% empty %}
+            <div class="text-center py-4 text-muted">
+                <i class="far fa-comment-dots fa-3x mb-3 d-block" style="color:#dee2e6;"></i>
+                No comments yet — be the first!
+            </div>
+            {% endfor %}
+
+            <!-- Comment Form -->
+            <div class="comment-form-box mt-3">
+                <h4><i class="fas fa-pen text-warning me-2"></i>Leave a Comment</h4>
+                {% if user.is_authenticated %}
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <textarea name="comment" class="form-control" rows="4"
+                                  placeholder="Write your thoughts..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-warning rounded-pill px-4 fw-bold">
+                        <i class="fas fa-paper-plane me-2"></i>Post Comment
+                    </button>
+                </form>
+                {% else %}
+                <div class="alert alert-warning border-0 rounded-3">
+                    <i class="fas fa-lock me-2"></i>
+                    Please <a href="{% url 'login' %}?next={{ request.path }}" class="fw-bold">login</a>
+                    to leave a comment.
+                </div>
+                {% endif %}
+            </div>
         </div>
     </div>
 
-    <div class="row">
-        <!-- Main Content -->
-        <div class="col-lg-8">
-            <!-- Featured Image -->
-            {% if single_blog.featured_image %}
-            <img src="{{ single_blog.featured_image.url }}" class="post-featured-image" alt="{{ single_blog.title }}">
-            {% endif %}
+    <!-- Sidebar -->
+    <div class="col-lg-4">
 
-            <!-- Post Content -->
-            <article class="post-content">
-                {{ single_blog.blog_body|linebreaks }}
-            </article>
-
-            <!-- Tags -->
-            {% if single_blog.tags %}
-            <div class="mt-4">
-                <h5><i class="fas fa-tags text-warning me-2"></i>Tags:</h5>
-                {% for tag in single_blog.tags.all %}
-                <a href="{% url 'posts_by_tag' tag.slug %}" class="badge bg-secondary text-decoration-none me-1">
-                    {{ tag.name }}
-                </a>
-                {% endfor %}
+        <!-- Author Box -->
+        <div class="author-box mb-4">
+            <div class="author-avatar">
+                {{ single_blog.author.username|first|upper }}
             </div>
-            {% endif %}
-
-            <!-- Comments Section -->
-            <div class="comments-section">
-                <h3 class="mb-4">
-                    <i class="fas fa-comments text-warning me-2"></i>
-                    Comments ({{ comment_count }})
-                </h3>
-
-                {% if comments %}
-                    {% for comment in comments %}
-                    <div class="comment-card">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <h6 class="comment-author mb-0">
-                                <i class="fas fa-user-circle me-2"></i>{{ comment.user }}
-                            </h6>
-                            <small class="comment-time">
-                                <i class="fas fa-clock me-1"></i>{{ comment.created_at|timesince }} ago
-                            </small>
-                        </div>
-                        <p class="mb-0">{{ comment.comment }}</p>
-                    </div>
-                    {% endfor %}
-                {% else %}
-                    <div class="no-comments">
-                        <i class="far fa-comment-alt"></i>
-                        <h5>No comments yet</h5>
-                        <p>Be the first to share your thoughts!</p>
-                    </div>
-                {% endif %}
-
-                <!-- Comment Form -->
-                <div class="comment-form">
-                    <h4 class="mb-3">Leave a Comment</h4>
-                    
-                    {% if user.is_authenticated %}
-                    <form method="POST">
-                        {% csrf_token %}
-                        <div class="mb-3">
-                            <label class="form-label">Your Comment</label>
-                            <textarea name="comment" class="form-control" rows="4" 
-                                      placeholder="Write your comment here..." required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-warning">
-                            <i class="fas fa-paper-plane me-2"></i>Post Comment
-                        </button>
-                    </form>
-                    {% else %}
-                    <div class="alert alert-info">
-                        <h5><i class="fas fa-info-circle me-2"></i>Login Required</h5>
-                        <p>Please <a href="{% url 'login' %}?next={{ request.path }}" class="alert-link">login</a> 
-                        or <a href="{% url 'register' %}" class="alert-link">register</a> to post a comment.</p>
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
+            <h5 class="fw-bold mb-1">{{ single_blog.author.get_full_name|default:single_blog.author.username }}</h5>
+            <p class="text-muted small mb-2">
+                {{ single_blog.author.blog_set.count }} article{{ single_blog.author.blog_set.count|pluralize }} published
+            </p>
+            <span class="badge rounded-pill" style="background:linear-gradient(135deg,#ffc107,#ff9800); color:#212529;">
+                Author
+            </span>
         </div>
 
-        <!-- Sidebar -->
-        <div class="col-lg-4">
-            <!-- Author Info -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-body text-center">
-                    <div class="avatar mb-3">
-                        <i class="fas fa-user-circle fa-4x text-warning"></i>
-                    </div>
-                    <h5 class="card-title">{{ single_blog.author }}</h5>
-                    <p class="card-text text-muted small">
-                        Author of this post with {{ single_blog.author.blog_set.count }} articles
-                    </p>
-                    <a href="#" class="btn btn-outline-warning btn-sm">View Profile</a>
-                </div>
-            </div>
+        <!-- Categories -->
+        <div class="sidebar-widget">
+            <h4 class="widget-title"><i class="fas fa-folder me-2 text-warning"></i>Categories</h4>
+            <ul class="list-unstyled mb-0">
+                {% for cat in categories %}
+                <li style="padding:8px 0; border-bottom:1px solid #f0f0f0;">
+                    <a href="{% url 'posts_by_category' cat.id %}"
+                       class="d-flex justify-content-between text-decoration-none"
+                       style="color:#555; font-size:0.9rem; font-weight:500;">
+                        <span>{{ cat.category_name }}</span>
+                        <span style="background:linear-gradient(135deg,#ffc107,#ff9800); color:#212529; padding:2px 9px; border-radius:12px; font-size:0.75rem; font-weight:700;">
+                            {{ cat.blog_set.count }}
+                        </span>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
 
-            <!-- Categories -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-warning text-dark">
-                    <h5 class="mb-0"><i class="fas fa-folder me-2"></i>Categories</h5>
+        <!-- Related Posts Sidebar -->
+        {% if related_posts %}
+        <div class="sidebar-widget">
+            <h4 class="widget-title"><i class="fas fa-link me-2 text-warning"></i>Related Posts</h4>
+            {% for post in related_posts %}
+            <div class="related-item">
+                {% if post.featured_image %}
+                <img src="{{ post.featured_image.url }}" alt="{{ post.title }}">
+                {% else %}
+                <div style="width:72px; height:56px; background:#f0f0f0; border-radius:8px; flex-shrink:0; display:flex; align-items:center; justify-content:center;">
+                    <i class="fas fa-image text-muted"></i>
                 </div>
-                <div class="card-body">
-                    <ul class="list-unstyled mb-0">
-                        {% for cat in categories %}
-                        <li class="mb-2">
-                            <a href="{% url 'posts_by_category' cat.id %}" class="text-decoration-none d-flex justify-content-between">
-                                <span>{{ cat.category_name }}</span>
-                                <span class="badge bg-warning">{{ cat.blog_set.count }}</span>
-                            </a>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Related Posts -->
-            <div class="card shadow-sm">
-                <div class="card-header bg-warning text-dark">
-                    <h5 class="mb-0"><i class="fas fa-newspaper me-2"></i>Related Posts</h5>
-                </div>
-                <div class="card-body">
-                    {% for post in related_posts|slice:":5" %}
-                    <div class="related-post">
-                        {% if post.featured_image %}
-                        <img src="{{ post.featured_image.url }}" alt="{{ post.title }}">
-                        {% else %}
-                        <div class="bg-light d-flex align-items-center justify-content-center" 
-                             style="width: 80px; height: 60px; border-radius: 5px;">
-                            <i class="fas fa-image text-muted"></i>
-                        </div>
-                        {% endif %}
-                        <div>
-                            <h6 class="related-post-title">
-                                <a href="{% url 'blogs' post.slug %}" class="text-dark text-decoration-none">
-                                    {{ post.title|truncatechars:40 }}
-                                </a>
-                            </h6>
-                            <small class="text-muted">{{ post.created_at|date:"M d" }}</small>
-                        </div>
+                {% endif %}
+                <div class="related-item-body">
+                    <div class="title">
+                        <a href="{% url 'blogs' post.slug %}">{{ post.title|truncatechars:48 }}</a>
                     </div>
-                    {% empty %}
-                    <p class="text-muted text-center">No related posts</p>
-                    {% endfor %}
+                    <div class="meta">
+                        <i class="fas fa-calendar me-1"></i>{{ post.created_at|date:"M d, Y" }}
+                    </div>
                 </div>
             </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Subscribe CTA -->
+        <div class="sidebar-widget text-center" style="background:linear-gradient(135deg,#ffc107,#ff9800);">
+            <i class="fas fa-envelope-open-text fa-2x mb-2" style="color:#212529;"></i>
+            <h5 class="fw-bold mb-2" style="color:#212529;">Never Miss a Post</h5>
+            <p class="small mb-3" style="color:#5a4000;">Subscribe and get new articles straight to your inbox.</p>
+            <a href="{% url 'subscribe' %}"
+               style="background:#212529; color:white; padding:10px 24px; border-radius:25px; text-decoration:none; font-weight:700; font-size:0.9rem; display:inline-block;">
+                <i class="fas fa-bell me-2"></i>Subscribe
+            </a>
         </div>
     </div>
 </div>
+
+<!-- ════════════════════ RELATED POSTS GRID ════════════════════ -->
+{% if related_posts %}
+<div class="mt-5">
+    <h2 style="font-weight:800; font-size:1.5rem; color:#222; margin-bottom:1.5rem;">
+        <i class="fas fa-layer-group text-warning me-2"></i>You Might Also Like
+    </h2>
+    <div class="row g-4">
+        {% for post in related_posts %}
+        <div class="col-sm-6 col-lg-3">
+            <div class="related-grid-card">
+                <div class="img-wrap">
+                    {% if post.featured_image %}
+                    <img src="{{ post.featured_image.url }}" alt="{{ post.title }}">
+                    {% else %}
+                    <div style="height:100%; background:linear-gradient(135deg,#ffc107,#ff9800); display:flex; align-items:center; justify-content:center;">
+                        <i class="fas fa-newspaper fa-2x text-white opacity-50"></i>
+                    </div>
+                    {% endif %}
+                    <span class="cat-tag">{{ post.category.category_name }}</span>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title"><a href="{% url 'blogs' post.slug %}">{{ post.title|truncatechars:50 }}</a></h5>
+                    <p style="font-size:0.82rem; color:#888; margin-bottom:0.8rem;">
+                        <i class="fas fa-calendar me-1 text-warning"></i>{{ post.created_at|date:"M d, Y" }}
+                    </p>
+                    <a href="{% url 'blogs' post.slug %}"
+                       style="color:#ff9800; font-weight:700; font-size:0.83rem; text-decoration:none;">
+                        Read More <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
 {% endblock %}
 
 {% block extra_js %}
 <script>
-    // Smooth scroll for anchor links in post content
-    document.addEventListener('DOMContentLoaded', function() {
-        const contentLinks = document.querySelectorAll('.post-content a[href^="#"]');
-        contentLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 100,
-                        behavior: 'smooth'
-                    });
-                }
-            });
+document.addEventListener('DOMContentLoaded', function () {
+    // Animate related grid cards
+    const cards = document.querySelectorAll('.related-grid-card');
+    const obs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                e.target.style.opacity = '1';
+                e.target.style.transform = 'translateY(0)';
+                obs.unobserve(e.target);
+            }
         });
+    }, { threshold: 0.1 });
+    cards.forEach(c => {
+        c.style.opacity = '0';
+        c.style.transform = 'translateY(20px)';
+        c.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        obs.observe(c);
     });
+});
 </script>
 {% endblock %}

@@ -45,3 +45,25 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.comment
+
+
+class RegisteredUser(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField(unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.email
+
+
+class Bookmark(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bookmarks')
+    blog = models.ForeignKey(Blog, on_delete=models.CASCADE, related_name='bookmarks')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'blog')
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.user.username} → {self.blog.title}"

@@ -1,11 +1,30 @@
 <div class="col-md-3">
-    <div class="nav flex-column nav-pills bg-light" aria-orientation="vertical">
-        <a href="{% url 'dashboard' %}" class="nav-link text-dark {% if '/dashboard/' == request.path %}bg-warning{% endif %}">Dashboard</a>
+    <div class="nav flex-column nav-pills bg-light rounded-3 p-2" aria-orientation="vertical">
+        <a href="{% url 'dashboard' %}"
+           class="nav-link text-dark {% if request.path == '/dashboard/' %}bg-warning fw-bold{% endif %}">
+            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+        </a>
         {% if perms.auth.view_user %}
-        <a href="{% url 'users' %}" class="nav-link text-dark {% if '/users/' in request.path %}bg-warning{% endif %}">Users</a>
+        <a href="{% url 'users' %}"
+           class="nav-link text-dark {% if '/users/' in request.path %}bg-warning fw-bold{% endif %}">
+            <i class="fas fa-users me-2"></i>Users
+        </a>
         {% endif %}
-        <a href="{% url 'categories' %}" class="nav-link text-dark {% if '/categories/' in request.path %}bg-warning{% endif %}">Categories</a>
-        <a href="{% url 'posts' %}" class="nav-link text-dark {% if '/posts/' in request.path %}bg-warning{% endif %}">Posts</a>
-        <a href="" class="nav-link text-dark">Logout</a>
+        <a href="{% url 'categories' %}"
+           class="nav-link text-dark {% if '/categories/' in request.path %}bg-warning fw-bold{% endif %}">
+            <i class="fas fa-folder me-2"></i>Categories
+        </a>
+        <a href="{% url 'posts' %}"
+           class="nav-link text-dark {% if '/posts/' in request.path %}bg-warning fw-bold{% endif %}">
+            <i class="fas fa-newspaper me-2"></i>Posts
+        </a>
+        <a href="{% url 'subscribers' %}"
+           class="nav-link text-dark {% if '/subscribers/' in request.path %}bg-warning fw-bold{% endif %}">
+            <i class="fas fa-envelope me-2"></i>Subscribers
+        </a>
+        <hr class="my-2">
+        <a href="{% url 'logout' %}" class="nav-link text-danger">
+            <i class="fas fa-sign-out-alt me-2"></i>Logout
+        </a>
     </div>
 </div>

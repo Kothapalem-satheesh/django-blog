@@ -102,30 +102,31 @@ from assignments.models import About, SocialLink
 from .forms import RegistrationForm
 
 def home(request):
-    featured_posts = Blog.objects.filter(is_featured=True, status='Published').order_by('updated_at')
-    posts = Blog.objects.filter(is_featured=False, status='Published')
-    
-    # Fetch about us
+    featured_posts = Blog.objects.filter(is_featured=True, status='Published').order_by('-updated_at')
+    posts = Blog.objects.filter(is_featured=False, status='Published').order_by('-created_at')
+    recent_posts = Blog.objects.filter(status='Published').order_by('-created_at')[:5]
+    all_posts_count = Blog.objects.filter(status='Published').count()
+
     try:
         about = About.objects.get()
-    except:
+    except Exception:
         about = None
-    
-    # Fetch social links for sidebar
+
     try:
         social_links = SocialLink.objects.all()
-    except:
+    except Exception:
         social_links = []
-    
-    # Fetch categories for sidebar
+
     try:
         categories = Category.objects.all()
-    except:
+    except Exception:
         categories = []
-    
+
     context = {
         'featured_posts': featured_posts,
         'posts': posts,
+        'recent_posts': recent_posts,
+        'all_posts_count': all_posts_count,
         'about': about,
         'social_links': social_links,
         'categories': categories,
@@ -197,9 +198,9 @@ def logout(request):
 # CUSTOM ERROR PAGES
 # ===========================================
 
-def custom_404(request, exception):
+def custom_404(request, exception=None):
     """
-    Custom 404 page handler
+    Custom 404 page handler — works from handler404 and catch-all URL.
     """
     # Get data for the 404 page
     try:
@@ -255,3 +256,6 @@ def custom_400(request, exception):
         'message': 'Bad request. Please check your input and try again.',
     }
     return render(request, '400.html', context, status=400)
+
+
+

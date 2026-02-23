@@ -18,4 +18,7 @@ urlpatterns = [
     path('users/add/', views.add_user, name='add_user'),
     path('users/edit/<int:pk>/', views.edit_user, name='edit_user'),
     path('users/delete/<int:pk>/', views.delete_user, name='delete_user'),
+    # subscribers
+    path('subscribers/', views.subscribers, name='subscribers'),
+    path('subscribers/delete/<int:pk>/', views.delete_subscriber, name='delete_subscriber'),
 ]

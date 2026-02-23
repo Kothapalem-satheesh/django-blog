@@ -356,6 +356,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'blogs.context_processors.get_categories',
                 'blogs.context_processors.get_social_links',
+                'blogs.context_processors.get_user_bookmarks',
             ],
         },
     },
@@ -363,11 +364,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'blog_main.wsgi.application'
 
-# Custom error handlers
-handler404 = 'blogs.views.custom_404'
-handler500 = 'blogs.views.custom_500'
-handler403 = 'blogs.views.custom_403'
-handler400 = 'blogs.views.custom_400'
+# Error handlers are defined in blog_main/urls.py
 
 # Database
 # For Vercel, you should use PostgreSQL instead of SQLite
@@ -424,3 +421,15 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+EMAIL_HOST_USER = 'basireddymethasree2004@gmail.com'
+EMAIL_HOST_PASSWORD = 'ayxq znvl nwof vtsj'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

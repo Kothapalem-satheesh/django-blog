@@ -16,7 +16,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
 from . import views
 from django.conf.urls.static import static
 from django.conf import settings
@@ -27,25 +27,26 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('category/', include('blogs.urls')),
     path('blogs/<slug:slug>/', BlogsView.blogs, name='blogs'),
-    # Search endpoint
     path('search/', BlogsView.search, name='search'),
+    path('subscribe/', BlogsView.register, name='subscribe'),
+    path('bookmarks/', BlogsView.my_bookmarks, name='my_bookmarks'),
+    path('bookmarks/toggle/<int:blog_id>/', BlogsView.toggle_bookmark, name='toggle_bookmark'),
     path('register/', views.register, name='register'),
     path('login/', views.login, name='login'),
     path('logout/', views.logout, name='logout'),
-    
-    # Dashboards
     path('dashboard/', include('dashboards.urls')),
 ]
+
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-# ===========================================
-# IMPORTANT: Add error handlers
-# ===========================================
+# Catch-all — MUST be last. Shows our custom 404 for every unknown URL,
+# even when DEBUG=True (where handler404 alone would not fire).
+urlpatterns += [re_path(r'^.*$', views.custom_404)]
 
-# Custom error handlers
-handler404 = 'blog_main.views.custom_404'  # Point to your custom 404 view
-handler500 = 'blog_main.views.custom_500'  # Optional: Custom 500 error
-handler403 = 'blog_main.views.custom_403'  # Optional: Custom 403 error
-handler400 = 'blog_main.views.custom_400'  # Optional: Custom 400 error
+# Django error handlers (used when DEBUG=False)
+handler404 = 'blog_main.views.custom_404'
+handler500 = 'blog_main.views.custom_500'
+handler403 = 'blog_main.views.custom_403'
+handler400 = 'blog_main.views.custom_400'

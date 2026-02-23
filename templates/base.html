@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Inspiring Blogs - Django Blog{% endblock %}</title>
+    <meta name="csrf-token" content="{{ csrf_token }}">
     
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -566,15 +567,173 @@
         }
         
         @media (max-width: 400px) {
-            .btn-sm {
-                font-size: 0.8rem;
-                padding: 0.2rem 0.5rem;
-            }
-            
-            .blog-header-logo {
-                font-size: 1.3rem;
-            }
+            .btn-sm { font-size: 0.8rem; padding: 0.2rem 0.5rem; }
+            .blog-header-logo { font-size: 1.3rem; }
         }
+
+        /* ══════════════════════════════
+           CHATBOT WIDGET
+        ══════════════════════════════ */
+        .chat-toggle {
+            position: fixed; bottom: 28px; left: 28px;
+            width: 56px; height: 56px;
+            background: linear-gradient(135deg, #ffc107, #ff9800);
+            border: none; border-radius: 50%; color: #212529;
+            font-size: 1.4rem; cursor: pointer; z-index: 1100;
+            box-shadow: 0 6px 20px rgba(255,193,7,0.45);
+            transition: all 0.3s ease;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .chat-toggle:hover { transform: scale(1.1) rotate(-10deg); }
+        .chat-badge {
+            position: absolute; top: -4px; right: -4px;
+            background: #dc3545; color: white; border-radius: 50%;
+            width: 20px; height: 20px; font-size: 0.7rem;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700;
+        }
+        .chat-window {
+            position: fixed; bottom: 96px; left: 28px;
+            width: 340px; max-height: 520px;
+            background: white; border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+            display: none; flex-direction: column;
+            z-index: 1099; overflow: hidden;
+            animation: chatSlideUp 0.3s ease;
+        }
+        .chat-window.open { display: flex; }
+        @keyframes chatSlideUp {
+            from { opacity:0; transform:translateY(20px) scale(0.95); }
+            to   { opacity:1; transform:translateY(0) scale(1); }
+        }
+        .chat-header {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: white; padding: 14px 16px;
+            display: flex; align-items: center; justify-content: space-between;
+            flex-shrink: 0;
+        }
+        .chat-avatar {
+            width: 36px; height: 36px;
+            background: linear-gradient(135deg,#ffc107,#ff9800);
+            border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; color: #212529; font-size: 1rem;
+        }
+        .chat-close {
+            background: rgba(255,255,255,0.1); border: none; color: white;
+            width: 28px; height: 28px; border-radius: 50%; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.85rem; transition: background 0.2s;
+        }
+        .chat-close:hover { background: rgba(255,255,255,0.25); }
+        .chat-messages {
+            flex: 1; overflow-y: auto; padding: 14px;
+            display: flex; flex-direction: column; gap: 10px;
+            scroll-behavior: smooth;
+        }
+        .chat-messages::-webkit-scrollbar { width: 4px; }
+        .chat-messages::-webkit-scrollbar-thumb { background:#e0e0e0; border-radius:2px; }
+        .msg {
+            max-width: 86%; padding: 10px 13px; border-radius: 14px;
+            font-size: 0.88rem; line-height: 1.5; word-break: break-word;
+        }
+        .msg.bot {
+            background: #f0f4ff; color: #333; border-bottom-left-radius: 4px;
+            align-self: flex-start;
+        }
+        .msg.user {
+            background: linear-gradient(135deg,#ffc107,#ff9800);
+            color: #212529; font-weight: 600;
+            border-bottom-right-radius: 4px; align-self: flex-end;
+        }
+        .msg .chat-link {
+            color: #1976d2; font-weight: 700; text-decoration: none;
+        }
+        .msg .chat-link:hover { text-decoration: underline; }
+        .chat-suggestions {
+            padding: 8px 12px; display: flex; flex-wrap: wrap; gap: 6px;
+            border-top: 1px solid #f0f0f0; flex-shrink: 0;
+        }
+        .chip {
+            background: #f0f4ff; color: #1976d2; border: 1px solid #d0e4ff;
+            border-radius: 20px; padding: 5px 12px; font-size: 0.78rem;
+            font-weight: 600; cursor: pointer; transition: all 0.2s ease;
+        }
+        .chip:hover { background: #1976d2; color: white; border-color: #1976d2; }
+        .chat-input-row {
+            display: flex; gap: 8px; padding: 10px 12px;
+            border-top: 1px solid #f0f0f0; flex-shrink: 0;
+        }
+        .chat-input-row input {
+            flex: 1; border: 2px solid #e8e8e8; border-radius: 25px;
+            padding: 8px 14px; font-size: 0.88rem; outline: none;
+            transition: border-color 0.2s;
+        }
+        .chat-input-row input:focus { border-color: #ffc107; }
+        .chat-send {
+            width: 38px; height: 38px; border-radius: 50%;
+            background: linear-gradient(135deg,#ffc107,#ff9800);
+            border: none; color: #212529; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: transform 0.2s ease;
+        }
+        .chat-send:hover { transform: scale(1.1); }
+        .typing-dot {
+            display: inline-block; width: 7px; height: 7px;
+            background: #aaa; border-radius: 50; margin: 0 2px;
+            animation: typingBounce 1s infinite;
+        }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typingBounce {
+            0%,60%,100% { transform: translateY(0); }
+            30% { transform: translateY(-6px); }
+        }
+
+        @media (max-width: 576px) {
+            .chat-window { width: calc(100vw - 40px); left: 20px; }
+            .chat-toggle { bottom: 20px; left: 20px; width: 50px; height: 50px; font-size: 1.2rem; }
+        }
+
+        /* ══════════════════════════════
+           BOOKMARK BUTTON
+        ══════════════════════════════ */
+        .bookmark-btn {
+            background: none; border: 2px solid rgba(255,255,255,0.5);
+            color: rgba(255,255,255,0.7); border-radius: 50%;
+            width: 34px; height: 34px; display: inline-flex;
+            align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.25s ease; font-size: 0.85rem;
+        }
+        .bookmark-btn:hover, .bookmark-btn.bookmarked {
+            background: #ffc107; border-color: #ffc107; color: #212529;
+        }
+        .bookmark-btn-dark {
+            background: none; border: 2px solid #dee2e6; color: #aaa;
+            border-radius: 50%; width: 34px; height: 34px;
+            display: inline-flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.25s ease; font-size: 0.85rem;
+        }
+        .bookmark-btn-dark:hover, .bookmark-btn-dark.bookmarked {
+            background: #ffc107; border-color: #ffc107; color: #212529;
+        }
+
+        /* ══════════════════════════════
+           BACK BUTTON (global)
+        ══════════════════════════════ */
+        .page-back-btn {
+            display: inline-flex; align-items: center; gap: 7px;
+            color: rgba(255,255,255,0.75); font-size: 0.88rem; font-weight: 600;
+            text-decoration: none; cursor: pointer; background: none; border: none;
+            padding: 0; margin-bottom: 1rem; transition: color 0.2s ease;
+        }
+        .page-back-btn:hover { color: #ffc107; }
+        .page-back-btn-dark {
+            display: inline-flex; align-items: center; gap: 7px;
+            color: #666; font-size: 0.88rem; font-weight: 600;
+            text-decoration: none; cursor: pointer; background: none; border: none;
+            padding: 0; transition: color 0.2s ease;
+        }
+        .page-back-btn-dark:hover { color: #ff9800; }
     </style>
     
     {% block extra_css %}{% endblock %}
@@ -632,13 +791,18 @@
                                 {% endif %}
                             </span>
                             
+                            <!-- Bookmarks -->
+                            <a href="{% url 'my_bookmarks' %}" class="btn btn-sm btn-outline-warning me-1" title="My Bookmarks">
+                                <i class="fas fa-bookmark"></i> <span class="d-none d-md-inline">Bookmarks</span>
+                            </a>
+
                             <!-- DASHBOARD LINK - ONLY FOR STAFF USERS -->
                             {% if user.is_staff %}
-                            <a href="{% url 'dashboard' %}" class="btn btn-sm btn-info me-2">
+                            <a href="{% url 'dashboard' %}" class="btn btn-sm btn-info me-1">
                                 <i class="fas fa-tachometer-alt"></i> <span class="d-none d-md-inline">Dashboard</span>
                             </a>
                             {% endif %}
-                            
+
                             <!-- Logout button -->
                             <a href="{% url 'logout' %}" class="btn btn-sm btn-outline-danger">
                                 <i class="fas fa-sign-out-alt"></i> <span class="d-none d-md-inline">Logout</span>
@@ -763,10 +927,47 @@
         </div>
     </footer>
 
-    <!-- Floating Action Button -->
-    <button class="fab-button" id="fabMenu" title="Quick Actions">
-        <i class="fas fa-bolt"></i>
+    <!-- ════ CHATBOT WIDGET ════ -->
+    <!-- Toggle Button -->
+    <button class="chat-toggle" id="chatToggle" title="Ask me anything!">
+        <i class="fas fa-comments" id="chatIcon"></i>
+        <span class="chat-badge" id="chatBadge" style="display:none;">1</span>
     </button>
+
+    <!-- Chat Window -->
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <div class="d-flex align-items-center gap-2">
+                <div class="chat-avatar"><i class="fas fa-robot"></i></div>
+                <div>
+                    <div class="fw-bold" style="font-size:0.95rem;">Blog Assistant</div>
+                    <div style="font-size:0.72rem; color:#a5d6a7;">● Online</div>
+                </div>
+            </div>
+            <button class="chat-close" onclick="toggleChat()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+            <!-- Messages injected by JS -->
+        </div>
+
+        <div class="chat-suggestions" id="chatSuggestions">
+            <button class="chip" onclick="askQuestion('What is this blog about?')">What is this blog?</button>
+            <button class="chip" onclick="askQuestion('How to subscribe?')">How to subscribe?</button>
+            <button class="chip" onclick="askQuestion('What categories are there?')">Categories</button>
+        </div>
+
+        <div class="chat-input-row">
+            <input type="text" id="chatInput"
+                   placeholder="Ask a question..."
+                   onkeydown="if(event.key==='Enter') sendMessage()">
+            <button onclick="sendMessage()" class="chat-send">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
 
     <!-- Back to Top Button -->
     <button class="back-to-top" id="backToTop" title="Back to Top">
@@ -1016,6 +1217,256 @@
         });
     </script>
     
+    <!-- ════ CHATBOT JS ════ -->
+    <script>
+    // ── Q&A Knowledge Base ──────────────────────────────────────────────
+    const QA = [
+        {
+            keys: ['hello','hi','hey','greetings','morning','evening','good day'],
+            answer: "Hi there! 👋 Welcome to <strong>Inspiring Blogs</strong>. How can I help you today?",
+            chips: ['What is this blog?','How to subscribe?','Browse categories']
+        },
+        {
+            keys: ['what is','about','this blog','this site','website','platform','purpose'],
+            answer: "Inspiring Blogs is a knowledge-sharing platform covering <strong>Technology</strong>, <strong>Programming</strong>, <strong>Web Development</strong>, and <strong>Artificial Intelligence</strong>. We publish in-depth articles to inspire and educate readers.",
+            chips: ['Latest articles','Browse categories','Subscribe']
+        },
+        {
+            keys: ['subscribe','subscription','newsletter','notify','notification','email alert','get notified'],
+            answer: "Subscribe at our <a href='/subscribe/' class='chat-link'>Subscribe page</a>! Enter your name and email — you'll get an email the moment a new article is published. It's completely free!",
+            chips: ['How to unsubscribe?','What topics?']
+        },
+        {
+            keys: ['unsubscribe','remove','stop email','cancel subscription'],
+            answer: "To unsubscribe, please contact us through our social media links in the footer and we'll remove you from the list right away.",
+            chips: ['Subscribe again','Contact us']
+        },
+        {
+            keys: ['category','categories','topics','subjects','sections','what topics'],
+            answer: "We cover 4 main categories:<br>📱 <a href='/category/1/' class='chat-link'>Technology</a><br>💻 <a href='/category/2/' class='chat-link'>Programming</a><br>🌐 <a href='/category/3/' class='chat-link'>Web Development</a><br>🤖 <a href='/category/4/' class='chat-link'>Artificial Intelligence</a>",
+            chips: ['Python articles','AI articles','Subscribe']
+        },
+        {
+            keys: ['comment','comments','reply','discuss','leave comment','post comment'],
+            answer: "To comment on an article, you need to be <a href='/login/' class='chat-link'>logged in</a>. Open any article, scroll to the bottom, and you'll find the comment section.",
+            chips: ['How to register?','How to login?']
+        },
+        {
+            keys: ['login','sign in','log in','signin','access account'],
+            answer: "Log in at our <a href='/login/' class='chat-link'>Login page</a> using your username and password. Staff users are redirected to the dashboard automatically.",
+            chips: ['How to register?','Forgot password?']
+        },
+        {
+            keys: ['register','sign up','create account','signup','join','new account'],
+            answer: "Create a free account on our <a href='/register/' class='chat-link'>Register page</a>. Once logged in you can comment on articles, bookmark favourites, and more!",
+            chips: ['How to login?','Browse articles']
+        },
+        {
+            keys: ['search','find article','look for','looking for','find post'],
+            answer: "Use the <strong>search bar</strong> at the top of every page, or visit the <a href='/search/' class='chat-link'>Search page</a>. You can search by title, description, or article content.",
+            chips: ['Browse categories','Latest articles']
+        },
+        {
+            keys: ['bookmark','save','saved','favourite','favorites','reading list','bookmarks'],
+            answer: "Click the <i class='fas fa-bookmark'></i> <strong>bookmark icon</strong> on any article card or inside an article to save it. View all saved articles at <a href='/bookmarks/' class='chat-link'>My Bookmarks</a>. You need to be logged in.",
+            chips: ['How to login?','Browse articles']
+        },
+        {
+            keys: ['share','sharing','facebook','twitter','whatsapp','linkedin','social'],
+            answer: "Every article has <strong>share buttons</strong> for Facebook, Twitter, LinkedIn, and WhatsApp right below the article title. Sharing is just one click away!",
+            chips: ['Browse articles','Subscribe']
+        },
+        {
+            keys: ['python','pip','django framework','flask','fastapi'],
+            answer: "We love Python! 🐍 Check our <a href='/category/2/' class='chat-link'>Programming category</a> for Python tips, best practices, Django tutorials, and more.",
+            chips: ['Web Development articles','AI articles']
+        },
+        {
+            keys: ['ai','artificial intelligence','machine learning','ml','deep learning','chatgpt','llm'],
+            answer: "Explore AI with us! 🤖 Visit our <a href='/category/4/' class='chat-link'>Artificial Intelligence category</a> for articles on AI trends, ML, LLMs, and the future of technology.",
+            chips: ['Programming articles','Technology articles']
+        },
+        {
+            keys: ['web','web dev','frontend','backend','html','css','bootstrap','react'],
+            answer: "Building for the web? 🌐 Check our <a href='/category/3/' class='chat-link'>Web Development category</a> covering Django, Bootstrap, REST APIs, and modern frontend techniques.",
+            chips: ['Python tutorials','Subscribe']
+        },
+        {
+            keys: ['cloud','technology','tech','software','devops','aws','azure'],
+            answer: "Stay up to date with tech! ☁️ Browse our <a href='/category/1/' class='chat-link'>Technology category</a> for cloud computing, software trends, and developer tools.",
+            chips: ['AI articles','Programming articles']
+        },
+        {
+            keys: ['latest','newest','recent','new post','new article'],
+            answer: "Check our <a href='/' class='chat-link'>Home page</a> for the latest articles! Featured posts are at the top, and all latest articles are listed below.",
+            chips: ['Browse categories','Subscribe']
+        },
+        {
+            keys: ['contact','reach','help','support','feedback','report'],
+            answer: "You can reach us through our social media links in the footer. We love hearing from our readers and always respond!",
+            chips: ['Subscribe','Browse articles']
+        },
+        {
+            keys: ['how often','frequency','publish','update','new','schedule'],
+            answer: "We publish new articles regularly. <a href='/subscribe/' class='chat-link'>Subscribe</a> to be the first to know whenever a new post goes live!",
+            chips: ['Subscribe now','Browse articles']
+        },
+        {
+            keys: ['dashboard','admin','staff','manage','control panel'],
+            answer: "The dashboard is available to <strong>staff users only</strong>. If you're a staff member, log in and you'll be redirected to the dashboard automatically.",
+            chips: ['How to login?','Browse articles']
+        },
+        {
+            keys: ['bye','goodbye','thanks','thank you','that\'s all','done'],
+            answer: "You're welcome! 😊 Happy reading! Don't forget to <a href='/subscribe/' class='chat-link'>subscribe</a> so you never miss a new article. See you around!",
+            chips: ['Browse articles','Go to home']
+        },
+    ];
+
+    const FALLBACK = "I'm not sure about that one. 🤔 Try asking about <strong>subscribing</strong>, <strong>categories</strong>, <strong>bookmarks</strong>, or <strong>how to comment</strong>.";
+    const FALLBACK_CHIPS = ['What is this blog?','How to subscribe?','Browse categories'];
+
+    // ── State ───────────────────────────────────────────────────────────
+    let chatOpen = false;
+    let firstOpen = true;
+
+    // ── Toggle ───────────────────────────────────────────────────────────
+    function toggleChat() {
+        chatOpen = !chatOpen;
+        const win = document.getElementById('chatWindow');
+        const icon = document.getElementById('chatIcon');
+        const badge = document.getElementById('chatBadge');
+        if (chatOpen) {
+            win.classList.add('open');
+            icon.className = 'fas fa-times';
+            badge.style.display = 'none';
+            if (firstOpen) { firstOpen = false; greetUser(); }
+            setTimeout(() => document.getElementById('chatInput').focus(), 300);
+        } else {
+            win.classList.remove('open');
+            icon.className = 'fas fa-comments';
+        }
+    }
+    document.getElementById('chatToggle').addEventListener('click', toggleChat);
+
+    // ── Greet on first open ──────────────────────────────────────────────
+    function greetUser() {
+        const hour = new Date().getHours();
+        const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
+        appendMsg('bot', `${greeting}! 👋 I'm the <strong>Blog Assistant</strong>. Ask me anything about this blog — subscriptions, categories, how to comment, and more!`);
+        setChips(['What is this blog?','How to subscribe?','Browse categories']);
+    }
+
+    // ── Send ─────────────────────────────────────────────────────────────
+    function sendMessage() {
+        const input = document.getElementById('chatInput');
+        const text = input.value.trim();
+        if (!text) return;
+        input.value = '';
+        appendMsg('user', text);
+        showTyping();
+        setTimeout(() => { removeTyping(); respond(text); }, 700);
+    }
+
+    function askQuestion(q) { appendMsg('user', q); showTyping(); setTimeout(() => { removeTyping(); respond(q); }, 600); }
+
+    // ── Match & respond ──────────────────────────────────────────────────
+    function respond(text) {
+        const lower = text.toLowerCase();
+        let best = null;
+        let bestScore = 0;
+        QA.forEach(item => {
+            let score = 0;
+            item.keys.forEach(k => { if (lower.includes(k)) score++; });
+            if (score > bestScore) { bestScore = score; best = item; }
+        });
+        if (best && bestScore > 0) {
+            appendMsg('bot', best.answer);
+            setChips(best.chips || []);
+        } else {
+            appendMsg('bot', FALLBACK);
+            setChips(FALLBACK_CHIPS);
+        }
+    }
+
+    // ── Helpers ───────────────────────────────────────────────────────────
+    function appendMsg(role, html) {
+        const box = document.getElementById('chatMessages');
+        const div = document.createElement('div');
+        div.className = 'msg ' + role;
+        div.innerHTML = html;
+        box.appendChild(div);
+        box.scrollTop = box.scrollHeight;
+    }
+    function showTyping() {
+        const box = document.getElementById('chatMessages');
+        const div = document.createElement('div');
+        div.className = 'msg bot'; div.id = 'typing-indicator';
+        div.innerHTML = '<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
+        box.appendChild(div); box.scrollTop = box.scrollHeight;
+    }
+    function removeTyping() {
+        const t = document.getElementById('typing-indicator');
+        if (t) t.remove();
+    }
+    function setChips(chips) {
+        const area = document.getElementById('chatSuggestions');
+        area.innerHTML = chips.map(c =>
+            `<button class="chip" onclick="askQuestion('${c}')">${c}</button>`
+        ).join('');
+    }
+
+    // Show badge after 3s if chat hasn't been opened
+    setTimeout(() => {
+        if (firstOpen) document.getElementById('chatBadge').style.display = 'flex';
+    }, 3000);
+    </script>
+
+    <!-- ════ BOOKMARK TOGGLE JS (used on all pages) ════ -->
+    <script>
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+
+    async function toggleBookmark(blogId, btn) {
+        if (!btn) return;
+        try {
+            const res = await fetch('/bookmarks/toggle/' + blogId + '/', {
+                method: 'POST',
+                headers: { 'X-CSRFToken': csrfToken }
+            });
+            if (res.status === 302 || res.redirected) {
+                window.location.href = '/login/?next=' + window.location.pathname;
+                return;
+            }
+            const data = await res.json();
+            if (data.status === 'added') {
+                btn.classList.add('bookmarked');
+                btn.title = 'Remove bookmark';
+                showToast('Bookmarked! <a href="/bookmarks/" style="color:#ffc107;">View</a>');
+            } else {
+                btn.classList.remove('bookmarked');
+                btn.title = 'Bookmark this article';
+                showToast('Bookmark removed.');
+            }
+        } catch(e) {
+            window.location.href = '/login/?next=' + window.location.pathname;
+        }
+    }
+
+    function showToast(html) {
+        const old = document.getElementById('bm-toast');
+        if (old) old.remove();
+        const t = document.createElement('div');
+        t.id = 'bm-toast';
+        t.style.cssText = 'position:fixed;bottom:90px;left:28px;background:#212529;color:white;padding:10px 18px;border-radius:25px;font-size:0.85rem;font-weight:600;z-index:9999;box-shadow:0 6px 20px rgba(0,0,0,0.25);animation:toastIn 0.3s ease;';
+        t.innerHTML = '🔖 ' + html;
+        document.body.appendChild(t);
+        const style = document.createElement('style');
+        style.textContent = '@keyframes toastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}';
+        document.head.appendChild(style);
+        setTimeout(() => t.remove(), 3500);
+    }
+    </script>
+
     {% block extra_js %}{% endblock %}
 </body>
 </html>

@@ -1,0 +1,246 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Subscribe - Inspiring Blogs{% endblock %}
+
+{% block extra_css %}
+<style>
+    .subscribe-wrapper {
+        min-height: 60vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 0;
+    }
+
+    .subscribe-card {
+        border: none;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+        width: 100%;
+        max-width: 500px;
+    }
+
+    .subscribe-header {
+        background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+        padding: 2.5rem 2rem;
+        text-align: center;
+    }
+
+    .subscribe-header .icon-circle {
+        width: 80px;
+        height: 80px;
+        background: rgba(255, 255, 255, 0.25);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        backdrop-filter: blur(5px);
+        border: 2px solid rgba(255, 255, 255, 0.4);
+    }
+
+    .subscribe-header .icon-circle i {
+        font-size: 2rem;
+        color: white;
+    }
+
+    .subscribe-body {
+        padding: 2.5rem;
+        background: white;
+    }
+
+    .form-floating-custom .form-label {
+        font-weight: 600;
+        color: #444;
+        margin-bottom: 0.4rem;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .form-floating-custom .form-control {
+        border: 2px solid #e8e8e8;
+        border-radius: 12px;
+        padding: 0.85rem 1rem;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: #fafafa;
+    }
+
+    .form-floating-custom .form-control:focus {
+        border-color: #ffc107;
+        background: white;
+        box-shadow: 0 0 0 4px rgba(255, 193, 7, 0.15);
+    }
+
+    .form-floating-custom .input-icon {
+        position: relative;
+    }
+
+    .form-floating-custom .input-icon i {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #ffc107;
+        font-size: 1rem;
+        z-index: 5;
+    }
+
+    .form-floating-custom .input-icon .form-control {
+        padding-left: 2.8rem;
+    }
+
+    .btn-subscribe {
+        background: linear-gradient(135deg, #ffc107, #ff9800);
+        color: #212529;
+        border: none;
+        border-radius: 12px;
+        padding: 0.9rem;
+        font-size: 1rem;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        width: 100%;
+        transition: all 0.3s ease;
+        margin-top: 0.5rem;
+    }
+
+    .btn-subscribe:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(255, 193, 7, 0.4);
+        color: #212529;
+    }
+
+    .benefits-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .benefits-list li {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 0;
+        font-size: 0.9rem;
+        color: #555;
+    }
+
+    .benefits-list li i {
+        color: #28a745;
+        font-size: 0.85rem;
+        width: 18px;
+        text-align: center;
+    }
+
+    .divider-text {
+        text-align: center;
+        position: relative;
+        margin: 1.5rem 0;
+        color: #aaa;
+        font-size: 0.85rem;
+    }
+
+    .divider-text::before,
+    .divider-text::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        width: 40%;
+        height: 1px;
+        background: #e0e0e0;
+    }
+
+    .divider-text::before { left: 0; }
+    .divider-text::after  { right: 0; }
+
+    .invalid-feedback {
+        font-size: 0.82rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="subscribe-wrapper">
+    <div class="subscribe-card">
+        <!-- Back button -->
+        <div class="px-3 pt-3">
+            <button class="page-back-btn-dark" onclick="history.back()">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+        </div>
+        <!-- Header -->
+        <div class="subscribe-header">
+            <div class="icon-circle">
+                <i class="fas fa-envelope-open-text"></i>
+            </div>
+            <h2 class="text-white fw-bold mb-1" style="font-size:1.7rem;">Subscribe to Our Blog</h2>
+            <p class="text-white mb-0" style="opacity:0.88; font-size:0.95rem;">
+                Get the latest articles delivered straight to your inbox
+            </p>
+        </div>
+
+        <!-- Body -->
+        <div class="subscribe-body">
+            <!-- Benefits -->
+            <ul class="benefits-list mb-4">
+                <li><i class="fas fa-check-circle"></i> Weekly curated articles &amp; insights</li>
+                <li><i class="fas fa-check-circle"></i> First to know about new posts</li>
+                <li><i class="fas fa-check-circle"></i> No spam — unsubscribe anytime</li>
+            </ul>
+
+            <div class="divider-text">Join the community</div>
+
+            <!-- Form -->
+            <form method="POST" novalidate>
+                {% csrf_token %}
+                <div class="form-floating-custom mb-3">
+                    <label>Your Name</label>
+                    <div class="input-icon">
+                        <i class="fas fa-user"></i>
+                        <input type="text"
+                               name="name"
+                               class="form-control{% if form.name.errors %} is-invalid{% endif %}"
+                               placeholder="Enter your full name"
+                               value="{{ form.name.value|default:'' }}"
+                               required>
+                        {% if form.name.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.name.errors %}{{ error }}{% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-floating-custom mb-4">
+                    <label>Email Address</label>
+                    <div class="input-icon">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email"
+                               name="email"
+                               class="form-control{% if form.email.errors %} is-invalid{% endif %}"
+                               placeholder="Enter your email address"
+                               value="{{ form.email.value|default:'' }}"
+                               required>
+                        {% if form.email.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.email.errors %}{{ error }}{% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-subscribe">
+                    <i class="fas fa-paper-plane me-2"></i>Subscribe Now
+                </button>
+            </form>
+
+            <p class="text-center text-muted mt-3 mb-0" style="font-size:0.82rem;">
+                <i class="fas fa-shield-alt me-1 text-success"></i>
+                Your information is secure and will never be shared.
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

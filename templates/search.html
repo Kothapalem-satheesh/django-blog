@@ -1,25 +1,288 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block title %}Search: "{{ keyword }}" — Inspiring Blogs{% endblock %}
+
+{% block extra_css %}
+<style>
+.search-hero {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border-radius: 18px;
+    padding: 2.5rem 2rem;
+    margin-bottom: 2.5rem;
+    color: white;
+}
+.search-hero h1 { font-size: 1.8rem; font-weight: 900; margin-bottom: 0.4rem; }
+.search-hero .keyword-highlight {
+    color: #ffc107;
+    font-style: italic;
+}
+.search-hero .count-text { font-size: 0.9rem; opacity: 0.75; }
+
+.search-bar-wrap .form-control {
+    border: 2px solid #e8e8e8;
+    border-radius: 25px 0 0 25px;
+    padding: 0.75rem 1.3rem;
+    font-size: 0.97rem;
+}
+.search-bar-wrap .form-control:focus {
+    border-color: #ffc107;
+    box-shadow: none;
+}
+.search-bar-wrap .btn {
+    border-radius: 0 25px 25px 0;
+    background: linear-gradient(135deg,#ffc107,#ff9800);
+    border: none;
+    color: #212529;
+    font-weight: 700;
+    padding: 0 1.5rem;
+}
+
+.section-heading {
+    font-weight: 800; font-size: 1.3rem; color: #222;
+    margin-bottom: 1.4rem;
+    display: flex; align-items: center; gap: 10px;
+}
+.section-heading::after {
+    content: ''; flex: 1; height: 3px;
+    background: linear-gradient(135deg,#ffc107,#ff9800);
+    border-radius: 3px;
+}
+
+.result-card {
+    border: none; border-radius: 14px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+    overflow: hidden; background: white;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    margin-bottom: 1.3rem;
+}
+.result-card:hover {
+    box-shadow: 0 12px 35px rgba(0,0,0,0.12);
+    transform: translateY(-3px);
+}
+.result-card .img-wrap {
+    height: 180px; overflow: hidden; position: relative;
+}
+.result-card .img-wrap img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.45s ease;
+}
+.result-card:hover .img-wrap img { transform: scale(1.05); }
+.result-card .cat-label {
+    position: absolute; bottom: 10px; left: 10px;
+    background: linear-gradient(135deg,#ffc107,#ff9800);
+    color: #212529; font-size: 0.72rem; font-weight: 700;
+    padding: 3px 10px; border-radius: 12px;
+}
+.result-card .card-body { padding: 1.3rem; }
+.result-card .card-title {
+    font-weight: 800; font-size: 1.05rem; line-height: 1.4;
+    margin-bottom: 0.4rem; color: #222;
+}
+.result-card .card-title a { color: inherit; text-decoration: none; }
+.result-card .card-title a:hover { color: #ff9800; }
+.result-card .card-meta {
+    font-size: 0.78rem; color: #999;
+    display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 0.6rem;
+}
+.result-card .card-meta i { color: #ffc107; }
+.result-card .excerpt { font-size: 0.88rem; color: #666; line-height: 1.65; }
+.read-link {
+    color: #ff9800; font-weight: 700; font-size: 0.83rem;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 5px;
+    transition: gap 0.2s ease; margin-top: 0.7rem;
+}
+.read-link:hover { color: #ffc107; gap: 9px; }
+
+.no-results {
+    text-align: center; padding: 4rem 2rem;
+    background: #f8f9fa; border-radius: 16px;
+}
+.no-results .icon { font-size: 4rem; color: #dee2e6; margin-bottom: 1rem; }
+
+.sidebar-widget {
+    background: white; border-radius: 14px;
+    padding: 1.4rem; box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+    margin-bottom: 1.5rem;
+}
+.widget-title {
+    font-weight: 800; font-size: 0.85rem;
+    text-transform: uppercase; letter-spacing: 0.8px;
+    color: #333; margin-bottom: 1rem;
+    padding-bottom: 8px; border-bottom: 3px solid #ffc107;
+}
+.cat-list { list-style: none; padding: 0; margin: 0; }
+.cat-list li { padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
+.cat-list li:last-child { border-bottom: none; }
+.cat-list a {
+    color: #555; text-decoration: none; font-size: 0.88rem;
+    font-weight: 500; display: flex; justify-content: space-between;
+    transition: color 0.2s ease;
+}
+.cat-list a:hover { color: #ff9800; }
+.count-badge {
+    background: linear-gradient(135deg,#ffc107,#ff9800);
+    color: #212529; font-size: 0.72rem; font-weight: 700;
+    padding: 2px 8px; border-radius: 10px;
+}
+
+@media (max-width: 576px) {
+    .search-hero h1 { font-size: 1.4rem; }
+    .search-hero { padding: 1.8rem 1.2rem; }
+}
+</style>
+{% endblock %}
 
 {% block content %}
 
-<h3 class="text-warning" style="letter-spacing: 2px;">Search Term - {{ keyword }}</h3>
-<div class="row mb-2">
-  {% if blogs %}
-  {% for i in blogs %}
-  <div class="col-md-6">
-    <div class="card border-0" >
-      <div class="card-body">
-        <h3><a href="{% url 'blogs' i.slug  %}" class="text-dark">{{ i.title }}</a></h3>
-        <small class="mb-1 text-muted">{{ i.created_at | timesince }} ago | {{ i.author }}</small>
-        <p class="card-text">{{ i.short_description | truncatewords:25 }}</p>
-      </div>
+<!-- ── Search Hero ── -->
+<div class="search-hero">
+    <button class="page-back-btn mb-2" onclick="history.back()">
+        <i class="fas fa-arrow-left"></i> Back
+    </button>
+    {% if keyword %}
+    <h1>
+        Results for <span class="keyword-highlight">"{{ keyword }}"</span>
+    </h1>
+    <p class="count-text">
+        Found <strong>{{ blogs|length }}</strong> article{{ blogs|length|pluralize }}
+    </p>
+    {% else %}
+    <h1>Search Articles</h1>
+    <p class="count-text">Enter a keyword below to find articles</p>
+    {% endif %}
+
+    <!-- New search bar in hero -->
+    <div class="mt-3 search-bar-wrap">
+        <form action="{% url 'search' %}" method="GET">
+            <div class="input-group">
+                <input type="text"
+                       class="form-control"
+                       name="keyword"
+                       value="{{ keyword }}"
+                       placeholder="Search articles, topics, authors..."
+                       required>
+                <button type="submit" class="btn">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </form>
     </div>
-  </div>
-  {% endfor %}
-  {% else %}
-  <p>No posts found</p>
-  {% endif %}
-  
+</div>
+
+<!-- ── Results + Sidebar ── -->
+<div class="row g-4">
+
+    <!-- Results -->
+    <div class="col-lg-8">
+        {% if keyword %}
+        <h2 class="section-heading">
+            <i class="fas fa-search text-warning"></i>
+            {% if blogs %}{{ blogs|length }} Result{{ blogs|length|pluralize }}{% else %}No Results{% endif %}
+        </h2>
+
+        {% if blogs %}
+        {% for post in blogs %}
+        <div class="result-card">
+            <div class="row g-0">
+                {% if post.featured_image %}
+                <div class="col-md-4">
+                    <div class="img-wrap">
+                        <img src="{{ post.featured_image.url }}" alt="{{ post.title }}">
+                        <span class="cat-label">{{ post.category.category_name }}</span>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                {% else %}
+                <div class="col-12">
+                {% endif %}
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-1">
+                            <h3 class="card-title mb-0">
+                                <a href="{% url 'blogs' post.slug %}">{{ post.title }}</a>
+                            </h3>
+                            {% if user.is_authenticated %}
+                            <button class="bookmark-btn-dark flex-shrink-0
+                                           {% if post.id in bookmarked_ids %}bookmarked{% endif %}"
+                                    title="{% if post.id in bookmarked_ids %}Remove bookmark{% else %}Bookmark{% endif %}"
+                                    onclick="toggleBookmark({{ post.id }}, this)">
+                                <i class="fas fa-bookmark"></i>
+                            </button>
+                            {% endif %}
+                        </div>
+                        <div class="card-meta">
+                            <span><i class="fas fa-user"></i> {{ post.author.get_full_name|default:post.author.username }}</span>
+                            <span><i class="fas fa-calendar"></i> {{ post.created_at|date:"M d, Y" }}</span>
+                            <span><i class="fas fa-folder"></i> {{ post.category.category_name }}</span>
+                        </div>
+                        <p class="excerpt">{{ post.short_description|truncatewords:30 }}</p>
+                        <a href="{% url 'blogs' post.slug %}" class="read-link">
+                            Read Article <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        {% else %}
+        <div class="no-results">
+            <div class="icon"><i class="fas fa-search"></i></div>
+            <h4 class="fw-bold mb-2">No Results Found</h4>
+            <p class="text-muted mb-3">
+                No articles match <strong>"{{ keyword }}"</strong>. Try different keywords or browse by category.
+            </p>
+            <a href="{% url 'home' %}" class="btn btn-warning rounded-pill px-4">
+                <i class="fas fa-home me-2"></i>Back to Home
+            </a>
+        </div>
+        {% endif %}
+
+        {% else %}
+        <div class="no-results">
+            <div class="icon"><i class="fas fa-keyboard"></i></div>
+            <h4 class="fw-bold mb-2">Start Searching</h4>
+            <p class="text-muted">Type a keyword in the search bar above to find articles.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+
+        <!-- Browse Categories -->
+        <div class="sidebar-widget">
+            <h4 class="widget-title"><i class="fas fa-folder me-2 text-warning"></i>Browse Categories</h4>
+            <ul class="cat-list">
+                {% for cat in categories %}
+                <li>
+                    <a href="{% url 'posts_by_category' cat.id %}">
+                        <span>{{ cat.category_name }}</span>
+                        <span class="count-badge">{{ cat.blog_set.count }}</span>
+                    </a>
+                </li>
+                {% empty %}
+                <li class="text-muted text-center small py-2">No categories</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Subscribe CTA -->
+        <div class="sidebar-widget text-center"
+             style="background:linear-gradient(135deg,#ffc107,#ff9800);">
+            <i class="fas fa-bell fa-2x mb-2" style="color:#212529;"></i>
+            <h5 class="fw-bold mb-1" style="color:#212529;">Stay Updated</h5>
+            <p class="small mb-3" style="color:#5a4000;">
+                Get notified every time a new article is published.
+            </p>
+            <a href="{% url 'subscribe' %}"
+               style="background:#212529; color:white; padding:10px 24px;
+                      border-radius:25px; text-decoration:none;
+                      font-weight:700; font-size:0.9rem; display:inline-block;">
+                <i class="fas fa-envelope me-2"></i>Subscribe Free
+            </a>
+        </div>
+
+    </div>
 </div>
 
 {% endblock %}

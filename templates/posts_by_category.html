@@ -1,29 +1,320 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ category.category_name }} — Inspiring Blogs{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ── Category Hero ── */
+.cat-hero {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+    border-radius: 18px;
+    padding: 3rem 2rem;
+    margin-bottom: 2.5rem;
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+.cat-hero::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    background: rgba(255,193,7,0.08);
+    border-radius: 50%;
+}
+.cat-hero::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: -30px;
+    width: 280px; height: 280px;
+    background: rgba(255,152,0,0.06);
+    border-radius: 50%;
+}
+.cat-pill {
+    background: linear-gradient(135deg,#ffc107,#ff9800);
+    color: #212529;
+    font-weight: 700;
+    font-size: 0.75rem;
+    padding: 5px 16px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    display: inline-block;
+    margin-bottom: 0.8rem;
+}
+.cat-hero h1 {
+    font-size: 2.4rem;
+    font-weight: 900;
+    margin-bottom: 0.6rem;
+}
+.cat-hero .meta {
+    font-size: 0.9rem;
+    opacity: 0.75;
+}
+
+/* ── Section heading ── */
+.section-heading {
+    font-weight: 800;
+    font-size: 1.35rem;
+    color: #222;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.section-heading::after {
+    content: '';
+    flex: 1;
+    height: 3px;
+    background: linear-gradient(135deg,#ffc107,#ff9800);
+    border-radius: 3px;
+}
+
+/* ── Post cards ── */
+.post-card {
+    border: none;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 5px 22px rgba(0,0,0,0.08);
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+    background: white;
+    height: 100%;
+}
+.post-card:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 18px 40px rgba(0,0,0,0.13);
+}
+.post-card .img-wrap {
+    height: 200px;
+    overflow: hidden;
+    position: relative;
+}
+.post-card .img-wrap img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.5s ease;
+}
+.post-card:hover .img-wrap img { transform: scale(1.07); }
+.post-card .img-wrap .no-img {
+    height: 100%;
+    background: linear-gradient(135deg, #1a1a2e, #0f3460);
+    display: flex; align-items: center; justify-content: center;
+}
+.post-card .date-tag {
+    position: absolute; top: 12px; right: 12px;
+    background: rgba(0,0,0,0.7); color: white;
+    font-size: 0.73rem; padding: 3px 9px; border-radius: 10px;
+}
+.post-card .card-body { padding: 1.3rem; }
+.post-card .card-title {
+    font-weight: 800; font-size: 1rem; line-height: 1.45;
+    margin-bottom: 0.5rem; color: #222;
+}
+.post-card .card-title a { color: inherit; text-decoration: none; }
+.post-card .card-title a:hover { color: #ff9800; }
+.post-card .card-meta {
+    font-size: 0.78rem; color: #999;
+    display: flex; flex-wrap: wrap; gap: 10px;
+    margin-bottom: 0.7rem;
+}
+.post-card .card-meta i { color: #ffc107; }
+.post-card .card-text { font-size: 0.88rem; color: #666; line-height: 1.65; margin-bottom: 1rem; }
+.read-link {
+    color: #ff9800; font-weight: 700; font-size: 0.83rem;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 5px;
+    transition: gap 0.2s ease;
+}
+.read-link:hover { color: #ffc107; gap: 9px; }
+
+/* ── Sidebar ── */
+.sidebar-widget {
+    background: white; border-radius: 14px;
+    padding: 1.4rem; box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+    margin-bottom: 1.5rem;
+}
+.widget-title {
+    font-weight: 800; font-size: 0.85rem;
+    text-transform: uppercase; letter-spacing: 0.8px;
+    color: #333; margin-bottom: 1rem;
+    padding-bottom: 8px; border-bottom: 3px solid #ffc107;
+}
+.cat-list { list-style: none; padding: 0; margin: 0; }
+.cat-list li { padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
+.cat-list li:last-child { border-bottom: none; }
+.cat-list a {
+    color: #555; text-decoration: none; font-size: 0.88rem;
+    font-weight: 500; display: flex; justify-content: space-between; align-items: center;
+    transition: color 0.2s ease;
+}
+.cat-list a:hover { color: #ff9800; }
+.cat-list a.active-cat {
+    color: #ff9800; font-weight: 700;
+}
+.count-badge {
+    background: linear-gradient(135deg,#ffc107,#ff9800);
+    color: #212529; font-size: 0.72rem; font-weight: 700;
+    padding: 2px 8px; border-radius: 10px;
+}
+
+/* ── Empty state ── */
+.empty-state {
+    text-align: center; padding: 4rem 2rem;
+    background: #f8f9fa; border-radius: 16px;
+}
+.empty-state .icon { font-size: 3.5rem; color: #dee2e6; margin-bottom: 1rem; }
+
+/* ── Animation ── */
+@keyframes fadeUp {
+    from { opacity:0; transform:translateY(20px); }
+    to   { opacity:1; transform:translateY(0); }
+}
+.post-card {
+    animation: fadeUp 0.5s ease-out both;
+}
+{% for i in posts %}
+.post-card:nth-child({{ forloop.counter }}) { animation-delay: {{ forloop.counter0 }}00ms; }
+{% endfor %}
+
+@media (max-width: 767px) {
+    .cat-hero h1 { font-size: 1.8rem; }
+    .cat-hero { padding: 2rem 1.2rem; }
+}
+</style>
+{% endblock %}
 
 {% block content %}
 
-
-  <!-- Featured Posts -->
-  <h3 class="text-uppercase text-warning" style="letter-spacing: 2px;"> {{ category }}</h3>
-  <div class="row mb-2">
-    {% if posts %}
-    {% for post in posts %}
-    <div class="col-md-6">
-      <div class="card border-0" >
-        <div class="card-body">
-          <h3><a href="{% url 'blogs' post.slug  %}" class="text-dark">{{ post.title }}</a></h3>
-          <small class="mb-1 text-muted">{{ post.created_at | timesince }} ago | {{ post.author }}</small>
-          <p class="card-text">{{ post.short_description | truncatewords:25 }}</p>
-        </div>
-      </div>
+<!-- ── Category Hero ── -->
+<div class="cat-hero">
+    <button class="page-back-btn mb-2" onclick="history.back()">
+        <i class="fas fa-arrow-left"></i> Back
+    </button>
+    <span class="cat-pill"><i class="fas fa-folder me-1"></i>Category</span>
+    <h1>{{ category.category_name }}</h1>
+    <div class="meta">
+        <i class="fas fa-newspaper me-2"></i>
+        <strong>{{ posts|length }}</strong> article{{ posts|length|pluralize }} in this category
     </div>
-    {% endfor %}
-    {% else %}
-    <p>No posts found</p>
-    {% endif %}
-    
-  </div>
+</div>
 
+<!-- ── Main grid + Sidebar ── -->
+<div class="row g-4">
+
+    <!-- Articles -->
+    <div class="col-lg-8">
+        <h2 class="section-heading">
+            <i class="fas fa-layer-group text-warning"></i>
+            Articles in "{{ category.category_name }}"
+        </h2>
+
+        {% if posts %}
+        <div class="row g-4">
+            {% for post in posts %}
+            <div class="col-sm-6">
+                <div class="post-card">
+                    <div class="img-wrap">
+                        {% if post.featured_image %}
+                        <img src="{{ post.featured_image.url }}" alt="{{ post.title }}">
+                        {% else %}
+                        <div class="no-img">
+                            <i class="fas fa-newspaper fa-3x text-warning opacity-50"></i>
+                        </div>
+                        {% endif %}
+                        <span class="date-tag">{{ post.created_at|date:"M d, Y" }}</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-1">
+                            <h3 class="card-title mb-0">
+                                <a href="{% url 'blogs' post.slug %}">{{ post.title }}</a>
+                            </h3>
+                            {% if user.is_authenticated %}
+                            <button class="bookmark-btn-dark flex-shrink-0
+                                           {% if post.id in bookmarked_ids %}bookmarked{% endif %}"
+                                    title="{% if post.id in bookmarked_ids %}Remove bookmark{% else %}Bookmark{% endif %}"
+                                    onclick="toggleBookmark({{ post.id }}, this)">
+                                <i class="fas fa-bookmark"></i>
+                            </button>
+                            {% endif %}
+                        </div>
+                        <div class="card-meta">
+                            <span><i class="fas fa-user"></i> {{ post.author.get_full_name|default:post.author.username }}</span>
+                            <span><i class="fas fa-clock"></i> {{ post.created_at|timesince }} ago</span>
+                            <span><i class="fas fa-comments"></i> {{ post.comment_set.count }}</span>
+                        </div>
+                        <p class="card-text">{{ post.short_description|truncatewords:22 }}</p>
+                        <a href="{% url 'blogs' post.slug %}" class="read-link">
+                            Read Article <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% else %}
+        <div class="empty-state">
+            <div class="icon"><i class="fas fa-folder-open"></i></div>
+            <h4 class="fw-bold mb-2">No Articles Yet</h4>
+            <p class="text-muted mb-3">No posts have been published in this category yet.</p>
+            <a href="{% url 'home' %}" class="btn btn-warning rounded-pill px-4">
+                <i class="fas fa-home me-2"></i>Back to Home
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+
+        <!-- All Categories -->
+        <div class="sidebar-widget">
+            <h4 class="widget-title"><i class="fas fa-folder me-2 text-warning"></i>All Categories</h4>
+            <ul class="cat-list">
+                {% for cat in categories %}
+                <li>
+                    <a href="{% url 'posts_by_category' cat.id %}"
+                       class="{% if cat.id == category.id %}active-cat{% endif %}">
+                        <span>
+                            {% if cat.id == category.id %}
+                            <i class="fas fa-caret-right me-1 text-warning"></i>
+                            {% endif %}
+                            {{ cat.category_name }}
+                        </span>
+                        <span class="count-badge">{{ cat.blog_set.count }}</span>
+                    </a>
+                </li>
+                {% empty %}
+                <li class="text-muted text-center small py-2">No categories</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Subscribe CTA -->
+        <div class="sidebar-widget text-center"
+             style="background:linear-gradient(135deg,#ffc107,#ff9800);">
+            <i class="fas fa-bell fa-2x mb-2" style="color:#212529;"></i>
+            <h5 class="fw-bold mb-1" style="color:#212529;">Never Miss a Post</h5>
+            <p class="small mb-3" style="color:#5a4000;">
+                Subscribe and get new articles straight to your inbox.
+            </p>
+            <a href="{% url 'subscribe' %}"
+               style="background:#212529; color:white; padding:10px 24px;
+                      border-radius:25px; text-decoration:none;
+                      font-weight:700; font-size:0.9rem; display:inline-block;">
+                <i class="fas fa-envelope me-2"></i>Subscribe Free
+            </a>
+        </div>
+
+        <!-- Back to Home -->
+        <div class="sidebar-widget text-center">
+            <i class="fas fa-home fa-2x text-warning mb-2 d-block"></i>
+            <h6 class="fw-bold mb-2">Explore More</h6>
+            <p class="text-muted small mb-3">Discover all articles across every category.</p>
+            <a href="{% url 'home' %}" class="btn btn-outline-warning rounded-pill w-100">
+                <i class="fas fa-newspaper me-2"></i>All Articles
+            </a>
+        </div>
+
+    </div>
 </div>
 
 {% endblock %}

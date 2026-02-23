@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard — Admin{% endblock %}
+
+{% block content %}
+<div class="row">
+    {% include 'dashboard/sidebar.html' %}
+
+    <div class="col-md-9">
+        <p class="text-muted mb-4">
+            Logged in as <strong>{{ user }}</strong>
+            <span class="badge bg-warning text-dark ms-2">
+                {% if user.is_superuser %}Superuser{% else %}Staff{% endif %}
+            </span>
+        </p>
+
+        <!-- Stats Cards -->
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-lg-3">
+                <div class="card border-0 shadow-sm rounded-4 text-center p-3 h-100"
+                     style="background:linear-gradient(135deg,#fff8e1,#fffde7); border-left:4px solid #ffc107 !important;">
+                    <div style="font-size:2.2rem; font-weight:900; color:#ff9800;">{{ blogs_count }}</div>
+                    <div class="text-muted small fw-semibold">Total Posts</div>
+                    <a href="{% url 'posts' %}" class="stretched-link"></a>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="card border-0 shadow-sm rounded-4 text-center p-3 h-100"
+                     style="background:linear-gradient(135deg,#e8f5e9,#f1f8e9);">
+                    <div style="font-size:2.2rem; font-weight:900; color:#28a745;">{{ published_count }}</div>
+                    <div class="text-muted small fw-semibold">Published</div>
+                    <a href="{% url 'posts' %}" class="stretched-link"></a>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="card border-0 shadow-sm rounded-4 text-center p-3 h-100"
+                     style="background:linear-gradient(135deg,#e3f2fd,#e8eaf6);">
+                    <div style="font-size:2.2rem; font-weight:900; color:#1976d2;">{{ category_count }}</div>
+                    <div class="text-muted small fw-semibold">Categories</div>
+                    <a href="{% url 'categories' %}" class="stretched-link"></a>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="card border-0 shadow-sm rounded-4 text-center p-3 h-100"
+                     style="background:linear-gradient(135deg,#fce4ec,#fce4ec);">
+                    <div style="font-size:2.2rem; font-weight:900; color:#e91e63;">{{ subscriber_count }}</div>
+                    <div class="text-muted small fw-semibold">Subscribers</div>
+                    <a href="{% url 'subscribers' %}" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="row g-3 mb-4">
+            <div class="col-12">
+                <h6 class="fw-bold text-muted text-uppercase mb-3" style="font-size:0.78rem; letter-spacing:1px;">
+                    Quick Actions
+                </h6>
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="{% url 'add_post' %}" class="btn btn-warning rounded-pill px-3">
+                        <i class="fas fa-plus me-1"></i> New Post
+                    </a>
+                    <a href="{% url 'add_category' %}" class="btn btn-outline-warning rounded-pill px-3">
+                        <i class="fas fa-folder-plus me-1"></i> New Category
+                    </a>
+                    <a href="{% url 'subscribers' %}" class="btn btn-outline-danger rounded-pill px-3">
+                        <i class="fas fa-envelope me-1"></i> View Subscribers
+                    </a>
+                    <a href="{% url 'home' %}" class="btn btn-outline-secondary rounded-pill px-3" target="_blank">
+                        <i class="fas fa-external-link-alt me-1"></i> View Blog
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Subscribers -->
+        {% if recent_subscribers %}
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+            <div class="card-header d-flex justify-content-between align-items-center py-3"
+                 style="background:linear-gradient(135deg,#ffc107,#ff9800);">
+                <span class="fw-bold" style="color:#212529;">
+                    <i class="fas fa-envelope me-2"></i>Recent Subscribers
+                </span>
+                <a href="{% url 'subscribers' %}" class="btn btn-sm btn-dark rounded-pill px-3">
+                    View All
+                </a>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4 py-2 small">Name</th>
+                            <th class="py-2 small">Email</th>
+                            <th class="py-2 small">Joined</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sub in recent_subscribers %}
+                        <tr>
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold text-white"
+                                         style="width:30px; height:30px; background:linear-gradient(135deg,#ffc107,#ff9800); font-size:0.75rem; flex-shrink:0;">
+                                        {{ sub.name|first|upper }}
+                                    </div>
+                                    <span class="small fw-semibold">{{ sub.name }}</span>
+                                </div>
+                            </td>
+                            <td class="small text-muted">{{ sub.email }}</td>
+                            <td class="small text-muted">{{ sub.created_at|date:"M d, Y" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% else %}
+        <div class="card border-0 shadow-sm rounded-4 text-center py-4">
+            <div style="font-size:2.5rem;">📭</div>
+            <p class="text-muted mt-2 mb-0">No subscribers yet. Share your blog!</p>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}

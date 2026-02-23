@@ -1,0 +1,222 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}404 — Page Not Found · Inspiring Blogs{% endblock %}
+
+{% block extra_css %}
+<style>
+.page-404 {
+    min-height: 65vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 0;
+}
+.error-card {
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.09);
+    padding: 3rem 2.5rem;
+    text-align: center;
+    max-width: 680px;
+    width: 100%;
+    animation: fadeUp 0.6s ease-out;
+}
+@keyframes fadeUp {
+    from { opacity:0; transform:translateY(30px); }
+    to   { opacity:1; transform:translateY(0); }
+}
+.error-num {
+    font-size: 7rem;
+    font-weight: 900;
+    line-height: 1;
+    background: linear-gradient(135deg, #ffc107, #ff9800);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: pulse 2.5s ease-in-out infinite;
+}
+@keyframes pulse {
+    0%,100% { transform: scale(1); }
+    50%      { transform: scale(1.04); }
+}
+.error-icon {
+    font-size: 3.5rem;
+    margin-bottom: 0.5rem;
+    animation: wobble 2s ease-in-out infinite;
+}
+@keyframes wobble {
+    0%,100% { transform: rotate(0deg); }
+    25%      { transform: rotate(-8deg); }
+    75%      { transform: rotate(8deg); }
+}
+.path-badge {
+    background: #f8f9fa;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-family: monospace;
+    font-size: 0.9rem;
+    color: #555;
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-bottom: 1.5rem;
+}
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 11px 22px;
+    border-radius: 25px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    cursor: pointer;
+}
+.btn-primary-custom {
+    background: linear-gradient(135deg,#ffc107,#ff9800);
+    color: #212529;
+}
+.btn-primary-custom:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(255,193,7,0.4);
+    color: #212529;
+}
+.btn-outline-custom {
+    background: transparent;
+    color: #555;
+    border-color: #ddd;
+}
+.btn-outline-custom:hover {
+    border-color: #ffc107;
+    color: #ff9800;
+    transform: translateY(-3px);
+}
+.divider-line {
+    height: 1px;
+    background: linear-gradient(to right, transparent, #e0e0e0, transparent);
+    margin: 2rem 0;
+}
+.search-box {
+    background: #f8f9fa;
+    border-radius: 14px;
+    padding: 1.4rem;
+    margin-bottom: 1.5rem;
+}
+.search-box .form-control {
+    border: 2px solid #e8e8e8;
+    border-radius: 25px 0 0 25px;
+    padding: 0.7rem 1.2rem;
+    font-size: 0.95rem;
+}
+.search-box .form-control:focus {
+    border-color: #ffc107;
+    box-shadow: none;
+}
+.search-box .btn {
+    border-radius: 0 25px 25px 0;
+    background: linear-gradient(135deg,#ffc107,#ff9800);
+    border: none;
+    color: #212529;
+    font-weight: 700;
+    padding: 0.7rem 1.4rem;
+}
+.cat-chip {
+    display: inline-block;
+    background: #f0f0f0;
+    color: #555;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: none;
+    margin: 3px;
+    transition: all 0.25s ease;
+}
+.cat-chip:hover {
+    background: linear-gradient(135deg,#ffc107,#ff9800);
+    color: #212529;
+    transform: translateY(-2px);
+}
+@media (max-width: 576px) {
+    .error-num { font-size: 5rem; }
+    .error-card { padding: 2rem 1.2rem; }
+    .action-buttons { flex-direction: column; align-items: center; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-404">
+    <div class="error-card">
+
+        <!-- Icon + Number -->
+        <div class="error-icon">🔍</div>
+        <div class="error-num">404</div>
+
+        <h2 class="fw-bold mt-2 mb-2" style="color:#222;">Page Not Found</h2>
+        <p class="text-muted mb-3" style="font-size:1rem; line-height:1.7; max-width:480px; margin:0 auto 1rem;">
+            The page you're looking for doesn't exist, has been moved, or was never here.
+        </p>
+
+        <!-- Requested path -->
+        <div class="path-badge">
+            <i class="fas fa-link me-2 text-warning"></i>{{ request.path }}
+        </div>
+
+        <!-- Action buttons -->
+        <div class="action-buttons d-flex flex-wrap justify-content-center gap-2 mb-3">
+            <a href="{% url 'home' %}" class="action-btn btn-primary-custom">
+                <i class="fas fa-home"></i> Back to Home
+            </a>
+            <button onclick="history.back()" class="action-btn btn-outline-custom">
+                <i class="fas fa-arrow-left"></i> Go Back
+            </button>
+        </div>
+
+        <div class="divider-line"></div>
+
+        <!-- Search -->
+        <div class="search-box">
+            <p class="fw-semibold mb-2 text-dark" style="font-size:0.9rem;">
+                <i class="fas fa-search me-2 text-warning"></i>Try searching for what you need:
+            </p>
+            <form action="{% url 'search' %}" method="GET">
+                <div class="input-group">
+                    <input type="text"
+                           class="form-control"
+                           name="keyword"
+                           placeholder="Search articles..."
+                           required
+                           autofocus>
+                    <button class="btn" type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Browse categories -->
+        {% if categories %}
+        <div>
+            <p class="fw-semibold mb-2 text-dark" style="font-size:0.85rem; text-transform:uppercase; letter-spacing:0.5px;">
+                <i class="fas fa-folder me-2 text-warning"></i>Browse Categories
+            </p>
+            <div>
+                {% for cat in categories %}
+                <a href="{% url 'posts_by_category' cat.id %}" class="cat-chip">
+                    {{ cat.category_name }}
+                    <span style="opacity:0.6;">({{ cat.blog_set.count }})</span>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}

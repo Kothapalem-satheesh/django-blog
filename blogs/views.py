@@ -132,53 +132,92 @@ def register(request):
 
             plain_message = (
                 f'Hi {user.name},\n\n'
-                f'Welcome to Inspiring Blogs! You have successfully subscribed.\n\n'
-                f'You will now receive email notifications whenever a new article is published.\n\n'
-                f'Visit us at: http://127.0.0.1:8000/\n\n'
-                f'Thank you,\nInspiring Blogs Team'
+                f'Welcome to Inspiring Blogs! Your subscription is confirmed.\n\n'
+                f'You will now receive an email every time a new article is published.\n\n'
+                f'Visit us: http://127.0.0.1:8000/\n\n'
+                f'Thank you for joining our community!\n'
+                f'— Satheesh Yadav\n'
+                f'  Inspiring Blogs | satheeshyadav85@gmail.com'
             )
             html_message = f"""
             <html>
-            <body style="font-family:Arial,sans-serif; background:#f8f9fa; padding:20px; margin:0;">
-              <div style="max-width:580px; margin:0 auto; background:white; border-radius:16px;
-                          box-shadow:0 4px 20px rgba(0,0,0,0.1); overflow:hidden;">
-                <div style="background:linear-gradient(135deg,#ffc107,#ff9800); padding:36px 30px; text-align:center;">
-                  <div style="font-size:48px; margin-bottom:12px;">🎉</div>
-                  <h1 style="color:white; margin:0; font-size:26px; font-weight:700;">
-                    You're Subscribed!
+            <body style="margin:0; padding:0; background:#f0f2f5;
+                         font-family:'Segoe UI',Arial,sans-serif;">
+              <div style="max-width:600px; margin:30px auto; background:white;
+                          border-radius:18px; overflow:hidden;
+                          box-shadow:0 8px 32px rgba(0,0,0,0.10);">
+
+                <!-- Header -->
+                <div style="background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%);
+                            padding:40px 30px; text-align:center;">
+                  <div style="width:72px; height:72px; margin:0 auto 16px;
+                              background:linear-gradient(135deg,#ffc107,#ff9800);
+                              border-radius:50%; display:flex; align-items:center;
+                              justify-content:center; font-size:32px;
+                              line-height:72px; text-align:center;">
+                    🎉
+                  </div>
+                  <h1 style="color:#ffc107; margin:0; font-size:28px; font-weight:800;">
+                    Welcome Aboard!
                   </h1>
-                  <p style="color:rgba(255,255,255,0.9); margin:8px 0 0; font-size:15px;">
-                    Welcome to Inspiring Blogs
+                  <p style="color:rgba(255,255,255,0.75); margin:8px 0 0; font-size:14px;">
+                    Inspiring Blogs &nbsp;•&nbsp; satheeshyadav85@gmail.com
                   </p>
                 </div>
+
+                <!-- Body -->
                 <div style="padding:32px 30px;">
-                  <p style="font-size:16px; color:#333; margin-bottom:8px;">
-                    Hi <strong>{user.name}</strong>,
+                  <p style="font-size:18px; color:#1a1a2e; font-weight:700; margin:0 0 8px;">
+                    Hi {user.name}! 👋
                   </p>
-                  <p style="color:#555; line-height:1.7; font-size:15px;">
-                    Thank you for subscribing! You are now part of our growing community of readers.
-                    We'll send you an email every time a new article goes live — so you never miss a post.
+                  <p style="color:#555; line-height:1.8; font-size:15px; margin:0 0 20px;">
+                    You have successfully subscribed to <strong>Inspiring Blogs</strong>.
+                    You are now part of a growing community of curious readers passionate
+                    about Technology, Programming, Web Development, and AI.
                   </p>
-                  <div style="background:#fff8e1; border-left:4px solid #ffc107; padding:14px 18px;
-                              border-radius:8px; margin:24px 0;">
-                    <p style="margin:0; color:#856404; font-size:14px;">
-                      <strong>📬 What to expect:</strong><br>
-                      Notifications for every new published article, straight to this inbox.
+
+                  <!-- What to expect box -->
+                  <div style="background:#f8f9ff; border:1px solid #e0e7ff;
+                              border-radius:12px; padding:18px 20px; margin-bottom:24px;">
+                    <p style="margin:0 0 10px; font-weight:700; color:#1a1a2e; font-size:14px;">
+                      📬 What happens next?
                     </p>
+                    <ul style="margin:0; padding-left:18px; color:#555; font-size:14px;
+                               line-height:2;">
+                      <li>You'll get an email every time a new article is published</li>
+                      <li>Fresh content on Technology, Programming, Web Dev &amp; AI</li>
+                      <li>No spam — only real articles, straight to your inbox</li>
+                    </ul>
                   </div>
-                  <div style="text-align:center; margin-top:28px;">
+
+                  <!-- CTA -->
+                  <div style="text-align:center; margin-top:10px;">
                     <a href="http://127.0.0.1:8000/"
-                       style="background:linear-gradient(135deg,#ffc107,#ff9800); color:#212529;
-                              padding:13px 30px; border-radius:25px; text-decoration:none;
-                              font-weight:bold; font-size:15px; display:inline-block;">
-                      Read Latest Articles →
+                       style="background:linear-gradient(135deg,#ffc107,#ff9800);
+                              color:#212529; padding:14px 36px; border-radius:30px;
+                              text-decoration:none; font-weight:800; font-size:15px;
+                              display:inline-block;
+                              box-shadow:0 4px 15px rgba(255,193,7,0.4);">
+                      Explore Latest Articles &rarr;
                     </a>
                   </div>
                 </div>
-                <div style="background:#f8f9fa; padding:16px 30px; text-align:center;
-                            font-size:12px; color:#999;">
-                  You received this because you subscribed at Inspiring Blogs.
+
+                <!-- Divider -->
+                <div style="height:1px;
+                            background:linear-gradient(to right,transparent,#e0e0e0,transparent);
+                            margin:0 30px;"></div>
+
+                <!-- Footer -->
+                <div style="padding:20px 30px; text-align:center; background:#fafafa;">
+                  <p style="margin:0 0 4px; font-size:13px; color:#444; font-weight:600;">
+                    Satheesh Yadav &nbsp;|&nbsp; Inspiring Blogs
+                  </p>
+                  <p style="margin:0; font-size:12px; color:#999;">
+                    You received this because you subscribed at Inspiring Blogs.
+                  </p>
                 </div>
+
               </div>
             </body>
             </html>

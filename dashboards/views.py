@@ -17,46 +17,84 @@ def notify_subscribers_new_post(post):
     if not recipient_list:
         return
 
-    subject = f'New Post: {post.title}'
+    subject = f'✨ New Article: {post.title} | Inspiring Blogs'
     plain_message = (
-        f'Hi there!\n\n'
-        f'A new blog post has been published on Inspiring Blogs:\n\n'
-        f'Title: {post.title}\n'
-        f'Category: {post.category.category_name}\n\n'
-        f'{post.short_description}\n\n'
-        f'Read the full article at: http://127.0.0.1:8000/blogs/{post.slug}/\n\n'
-        f'Thank you for subscribing!\n'
-        f'— Inspiring Blogs Team'
+        f'Hello!\n\n'
+        f'A brand new article has just been published on Inspiring Blogs!\n\n'
+        f'Title    : {post.title}\n'
+        f'Category : {post.category.category_name}\n'
+        f'Summary  : {post.short_description}\n\n'
+        f'Read the full article here:\n'
+        f'http://127.0.0.1:8000/blogs/{post.slug}/\n\n'
+        f'Thanks for being part of our community!\n'
+        f'— Satheesh Yadav\n'
+        f'  Inspiring Blogs | satheeshyadav85@gmail.com'
     )
     html_message = f"""
     <html>
-    <body style="font-family: Arial, sans-serif; background:#f8f9fa; padding:20px;">
-      <div style="max-width:600px; margin:0 auto; background:white; border-radius:12px;
-                  box-shadow:0 4px 20px rgba(0,0,0,0.1); overflow:hidden;">
-        <div style="background:linear-gradient(135deg,#ffc107,#ff9800); padding:30px; text-align:center;">
-          <h1 style="color:white; margin:0; font-size:24px;">📰 New Blog Post!</h1>
-          <p style="color:rgba(255,255,255,0.9); margin:8px 0 0;">Inspiring Blogs</p>
-        </div>
-        <div style="padding:30px;">
-          <h2 style="color:#333; font-size:22px; margin-bottom:10px;">{post.title}</h2>
-          <p style="display:inline-block; background:#fff3cd; color:#856404; padding:4px 12px;
-                    border-radius:20px; font-size:13px; margin-bottom:16px;">
-            📁 {post.category.category_name}
+    <body style="margin:0; padding:0; background:#f0f2f5; font-family:'Segoe UI',Arial,sans-serif;">
+      <div style="max-width:620px; margin:30px auto; background:white;
+                  border-radius:18px; overflow:hidden;
+                  box-shadow:0 8px 32px rgba(0,0,0,0.10);">
+
+        <!-- Header -->
+        <div style="background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%);
+                    padding:36px 30px; text-align:center; position:relative;">
+          <div style="font-size:42px; margin-bottom:10px;">📰</div>
+          <h1 style="color:#ffc107; margin:0; font-size:26px; font-weight:800;
+                     letter-spacing:0.5px;">New Article Published!</h1>
+          <p style="color:rgba(255,255,255,0.7); margin:8px 0 0; font-size:14px;">
+            Inspiring Blogs &nbsp;•&nbsp; satheeshyadav85@gmail.com
           </p>
-          <p style="color:#555; line-height:1.7; font-size:15px;">{post.short_description}</p>
-          <div style="text-align:center; margin-top:24px;">
+        </div>
+
+        <!-- Category badge -->
+        <div style="padding:20px 30px 0; text-align:center;">
+          <span style="background:linear-gradient(135deg,#ffc107,#ff9800);
+                       color:#212529; font-size:12px; font-weight:700;
+                       padding:5px 16px; border-radius:20px;
+                       text-transform:uppercase; letter-spacing:0.8px;">
+            📁 {post.category.category_name}
+          </span>
+        </div>
+
+        <!-- Article info -->
+        <div style="padding:24px 30px;">
+          <h2 style="color:#1a1a2e; font-size:22px; font-weight:800;
+                     margin:0 0 14px; line-height:1.35;">{post.title}</h2>
+          <p style="color:#555; line-height:1.8; font-size:15px;
+                    margin:0 0 24px; border-left:4px solid #ffc107;
+                    padding-left:14px; background:#fffdf0;
+                    border-radius:0 8px 8px 0; padding:12px 14px;">
+            {post.short_description}
+          </p>
+
+          <!-- CTA Button -->
+          <div style="text-align:center; margin:28px 0 10px;">
             <a href="http://127.0.0.1:8000/blogs/{post.slug}/"
-               style="background:linear-gradient(135deg,#ffc107,#ff9800); color:#212529;
-                      padding:12px 28px; border-radius:25px; text-decoration:none;
-                      font-weight:bold; font-size:15px;">
-              Read Full Article →
+               style="background:linear-gradient(135deg,#ffc107,#ff9800);
+                      color:#212529; padding:14px 36px; border-radius:30px;
+                      text-decoration:none; font-weight:800; font-size:15px;
+                      display:inline-block; box-shadow:0 4px 15px rgba(255,193,7,0.4);">
+              Read Full Article &rarr;
             </a>
           </div>
         </div>
-        <div style="background:#f8f9fa; padding:16px; text-align:center;
-                    font-size:12px; color:#888;">
-          You're receiving this because you subscribed to Inspiring Blogs.
+
+        <!-- Divider -->
+        <div style="height:1px; background:linear-gradient(to right,transparent,#e0e0e0,transparent);
+                    margin:0 30px;"></div>
+
+        <!-- Footer -->
+        <div style="padding:20px 30px; text-align:center; background:#fafafa;">
+          <p style="margin:0 0 6px; font-size:13px; color:#444; font-weight:600;">
+            Satheesh Yadav &nbsp;|&nbsp; Inspiring Blogs
+          </p>
+          <p style="margin:0; font-size:12px; color:#999;">
+            You received this because you subscribed at Inspiring Blogs.
+          </p>
         </div>
+
       </div>
     </body>
     </html>

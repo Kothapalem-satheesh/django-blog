@@ -17,10 +17,12 @@ A full-featured blog application built with **Django**. It includes a public blo
 > If you prefer local screenshots, add them under a `screenshots/` folder and update the paths.
 
 #### Home Page
-<img width="958" height="573" alt="Home Page" src="https://github.com/user-attachments/assets/23186853-e92e-4ab4-9539-abe082242be8" />
+<img width="958" height="510" alt="image" src="https://github.com/user-attachments/assets/63a764af-3b46-4acf-b778-b12751f9c2ff" />
+
 
 #### Featured Posts
-<img width="960" height="573" alt="Featured Posts" src="https://github.com/user-attachments/assets/34434963-3e55-4b38-ab96-7be4801fdb27" />
+<img width="955" height="572" alt="image" src="https://github.com/user-attachments/assets/1f9f0d7f-9d04-4384-9164-b7c59339fa3d" />
+
 
 #### Login Page
 <img width="960" height="573" alt="Login Page" src="https://github.com/user-attachments/assets/eb8d19c3-23ea-4def-9856-4c94001151ba" />
@@ -29,16 +31,20 @@ A full-featured blog application built with **Django**. It includes a public blo
 <img width="960" height="576" alt="Registration Page" src="https://github.com/user-attachments/assets/00234e9e-1f13-4bb9-b61e-d9476d63e6d1" />
 
 #### Post Detail
-<img width="960" height="569" alt="Post Detail" src="https://github.com/user-attachments/assets/655146c0-e570-488c-9f60-056b6c2d55a3" />
+<img width="960" height="567" alt="image" src="https://github.com/user-attachments/assets/0a081e32-8730-43cc-a1f2-35fa6da4cd12" />
+
 
 #### Blog Post with Comments
-<img width="959" height="571" alt="Blog Post with Comments" src="https://github.com/user-attachments/assets/6024a7b6-fba1-42b7-a59b-0308b489c942" />
+<img width="960" height="506" alt="image" src="https://github.com/user-attachments/assets/b342543b-3bab-487b-97b1-a37ae0ebb59b" />
+
 
 #### Dashboard Overview
-<img width="960" height="575" alt="Dashboard Overview" src="https://github.com/user-attachments/assets/a724385e-881c-461a-a859-05883d305171" />
+<img width="960" height="572" alt="image" src="https://github.com/user-attachments/assets/0958f6fd-16e7-4edc-a250-b4b86c8a1796" />
+
 
 #### Categories Management
-<img width="959" height="571" alt="Categories Management" src="https://github.com/user-attachments/assets/20aac721-f597-49de-9be0-33f5765ef3c8" />
+<img width="960" height="514" alt="image" src="https://github.com/user-attachments/assets/4badba30-bc82-4cee-84cc-a2f496eedde5" />
+
 
 ## Tech Stack
 
